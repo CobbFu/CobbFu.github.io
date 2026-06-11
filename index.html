@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Systems, Drawn.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+/* ── FONTS (must be first) ──────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+/* ── TOKENS (Drafting Paper) ────────────────────────────────────── */
+:root{
+  --paper:#F3EFE6; --paper-deep:#ECE6D9;
+  --ink:#1C1B19; --ink-80:#3A3835;
+  --slate:#5C6B73; --slate-40:#A7B0B4;
+  --terracotta:#BC4B2B; --terracotta-deep:#9E3C1F;
+  --grid-line:rgba(92,107,115,0.10);
+  --hairline:rgba(28,27,25,0.18);
+
+  --font-display:'Instrument Serif',Georgia,'Times New Roman',serif;
+  --font-mono:'IBM Plex Mono','SF Mono',Menlo,monospace;
+  --font-body:'IBM Plex Sans',-apple-system,system-ui,sans-serif;
+
+  --mono-track:0.08em; --mono-track-w:0.16em;
+  --grid-size:24px;
+  --page-margin:80px; --column-max:680px; --margin-note:240px;
+
+  --ease:cubic-bezier(0.22,1,0.36,1);
+}
+
+*{box-sizing:border-box;}
+html{ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+body{
+  margin:0; background-color:var(--paper);
+  color:var(--ink-80); font-family:var(--font-body);
+  font-size:16px; line-height:1.55;
+  background-image:
+    linear-gradient(to right,var(--grid-line) 1px,transparent 1px),
+    linear-gradient(to bottom,var(--grid-line) 1px,transparent 1px);
+  background-size:var(--grid-size) var(--grid-size);
+}
+
+.wrap{ max-width:1200px; margin:0 auto; padding:0 var(--page-margin); }
+
+/* ── MASTHEAD ───────────────────────────────────────────────────── */
+.masthead{
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:20px 0 14px; border-bottom:1px solid var(--hairline);
+  font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate);
+}
+.masthead span{ white-space:nowrap; }
+.masthead .m-r{ color:var(--slate-40); }
+
+/* ── HERO ───────────────────────────────────────────────────────── */
+.hero{
+  display:grid; grid-template-columns:minmax(0,1fr) var(--margin-note);
+  gap:48px; align-items:start;
+  padding:64px 0 56px; border-bottom:1px solid var(--ink);
+}
+.hero__title{
+  font-family:var(--font-display); font-weight:400;
+  font-size:clamp(52px,6.4vw,90px); line-height:1.1;
+  letter-spacing:-0.01em; color:var(--ink); margin:0 0 30px;
+}
+.hero__title .pt{ color:var(--terracotta); }
+.hero__thesis{
+  max-width:var(--column-max); font-size:19px; line-height:1.5;
+  color:var(--ink-80); margin:0;
+}
+.hero__thesis em{ color:var(--ink); font-style:italic; }
+.hero__note{
+  border-top:1px solid var(--ink); padding-top:14px; margin-top:8px;
+  position:relative;
+}
+.hero__note .nlabel{
+  font-family:var(--font-mono); font-size:10px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate); display:block; margin-bottom:10px;
+}
+.hero__note p{
+  font-family:var(--font-display); font-style:italic; font-size:21px;
+  line-height:1.25; color:var(--slate); margin:0;
+}
+
+/* ── TABS (sticky) ──────────────────────────────────────────────── */
+.tabsbar{
+  position:sticky; top:0; z-index:20;
+  background-color:var(--paper);
+  border-bottom:1px solid var(--ink);
+  background-image:
+    linear-gradient(to right,var(--grid-line) 1px,transparent 1px),
+    linear-gradient(to bottom,var(--grid-line) 1px,transparent 1px);
+  background-size:var(--grid-size) var(--grid-size);
+}
+.tabsbar .wrap{ display:flex; gap:40px; }
+.tab{
+  appearance:none; background:none; border:none; cursor:pointer;
+  font-family:var(--font-mono); font-size:12px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate);
+  padding:18px 0 17px; margin-bottom:-1px;
+  border-bottom:1px solid transparent;
+  transition:color 180ms var(--ease);
+}
+.tab:hover{ color:var(--ink); }
+.tab[aria-selected="true"]{
+  color:var(--ink); border-bottom-color:var(--terracotta);
+}
+.tab .idx{ color:var(--slate-40); margin-right:8px; }
+.tab[aria-selected="true"] .idx{ color:var(--terracotta); }
+
+/* ── PANELS ─────────────────────────────────────────────────────── */
+.panel{ display:none; padding:56px 0 40px; }
+.panel.is-active{ display:block; }
+.intro{
+  max-width:760px; font-size:21px; line-height:1.42; color:var(--ink);
+  margin:0 0 56px; font-weight:400;
+}
+.intro .lead-mark{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate); display:block; margin-bottom:16px;
+}
+
+/* intro row = thesis (left) + repo call-to-action (right) */
+.intro-row{
+  display:flex; gap:56px; align-items:flex-start; justify-content:space-between;
+  flex-wrap:wrap; margin:0 0 56px;
+}
+.intro-row .intro{ margin:0; flex:1 1 520px; max-width:700px; }
+
+/* GitHub CTA — the one focal accent for this view; inverts on hover */
+.repo-cta{
+  flex:0 0 auto; align-self:flex-start; min-width:272px;
+  display:flex; flex-direction:column; gap:10px;
+  text-decoration:none; background:var(--paper);
+  border:1px solid var(--terracotta); padding:18px 22px 17px;
+  color:var(--terracotta);
+  transition:background 170ms var(--ease), color 170ms var(--ease), border-color 170ms var(--ease);
+}
+.repo-cta:hover, .repo-cta:focus-visible{
+  background:var(--terracotta); border-color:var(--terracotta); color:var(--paper);
+}
+.repo-cta__eyebrow{
+  font-family:var(--font-mono); font-size:10px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate); transition:color 170ms var(--ease);
+}
+.repo-cta__path{
+  font-family:var(--font-mono); font-size:15px; letter-spacing:0.02em; color:var(--ink);
+  transition:color 170ms var(--ease);
+}
+.repo-cta__go{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track);
+  text-transform:uppercase; display:inline-flex; align-items:center; gap:8px;
+}
+.repo-cta__go .ar{ font-size:14px; }
+.repo-cta:hover .repo-cta__eyebrow, .repo-cta:focus-visible .repo-cta__eyebrow{ color:rgba(243,239,230,0.78); }
+.repo-cta:hover .repo-cta__path, .repo-cta:focus-visible .repo-cta__path{ color:var(--paper); }
+
+/* ── PLATE ──────────────────────────────────────────────────────── */
+.plate{
+  position:relative; border:1px solid var(--ink); background:var(--paper);
+  margin-bottom:64px;
+}
+.plate__body{
+  position:relative; padding:40px 40px 32px;
+  background-image:
+    linear-gradient(to right,var(--grid-line) 1px,transparent 1px),
+    linear-gradient(to bottom,var(--grid-line) 1px,transparent 1px);
+  background-size:var(--grid-size) var(--grid-size);
+}
+.plate__eyebrow{
+  position:absolute; top:14px; left:16px; white-space:nowrap;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate); background:var(--paper);
+  padding:0 6px; z-index:3;
+}
+.plate svg{ display:block; width:100%; height:auto; }
+
+/* registration corner ticks */
+.tick{ position:absolute; width:14px; height:14px; z-index:4; pointer-events:none; }
+.tick::before,.tick::after{ content:''; position:absolute; background:var(--slate-40); }
+.tick::before{ left:6px; top:0; width:1px; height:14px; }
+.tick::after{ top:6px; left:0; height:1px; width:14px; }
+.tick.tl{ top:-7px; left:-7px; } .tick.tr{ top:-7px; right:-7px; }
+.tick.bl{ bottom:-7px; left:-7px; } .tick.br{ bottom:-7px; right:-7px; }
+
+/* title block */
+.titleblock{
+  position:absolute; right:-1px; bottom:-1px; z-index:5;
+  border:1px solid var(--ink); background:var(--paper);
+  font-family:var(--font-mono); color:var(--ink);
+  min-width:316px;
+}
+.tb-main{ display:flex; align-items:baseline; gap:12px; padding:9px 16px 8px;
+  white-space:nowrap; }
+.tb-main .no{ font-size:11px; letter-spacing:var(--mono-track); color:var(--terracotta); }
+.tb-main .ti{ font-size:11px; letter-spacing:var(--mono-track); text-transform:uppercase; }
+.tb-meta{ display:grid; grid-template-columns:1fr 1fr 0.7fr; }
+.tb-meta div{ padding:7px 14px; font-size:10px; letter-spacing:var(--mono-track);
+  text-transform:uppercase; color:var(--slate); border-right:1px solid var(--hairline); white-space:nowrap; }
+.tb-meta div:last-child{ border-right:none; }
+.tb-meta b{ color:var(--ink); font-weight:500; }
+.tb-meta .dot-tc{ color:var(--terracotta); }
+
+/* placeholder plate */
+.plate--placeholder .plate__body{ display:flex; flex-direction:column;
+  align-items:center; justify-content:center; min-height:480px; text-align:center; }
+.ph-frame{ border:1px dashed var(--slate-40); padding:64px 80px; }
+.ph-eyebrow{ font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate); margin:0 0 18px; }
+.ph-title{ font-family:var(--font-display); font-size:46px; line-height:1; color:var(--ink); margin:0 0 18px; }
+.ph-sub{ font-family:var(--font-mono); font-size:12px; letter-spacing:var(--mono-track);
+  text-transform:uppercase; color:var(--slate-40); margin:0; }
+
+/* ── INTERACTIVE NODES + DETAIL SHEET ───────────────────────────── */
+.plate-hint{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track);
+  text-transform:uppercase; color:var(--slate); margin:0 0 22px;
+}
+.plate-hint .pm{ color:var(--terracotta); margin-right:7px; font-weight:500; }
+
+.hot{ fill:transparent; cursor:pointer; outline:none; transition:fill 140ms var(--ease); }
+.hot:hover, .hot:focus-visible{ fill:rgba(188,75,43,0.06); stroke:var(--terracotta); stroke-width:1; }
+.openmarks text{ pointer-events:none; user-select:none; }
+
+.sheet-overlay{
+  position:fixed; inset:0; z-index:50; display:none;
+  align-items:flex-start; justify-content:center;
+  padding:72px 24px; overflow-y:auto;
+  background:rgba(28,27,25,0.46);
+}
+.sheet-overlay.is-open{ display:flex; }
+.sheet{
+  position:relative; width:100%; max-width:720px;
+  background:var(--paper); border:1px solid var(--ink);
+  padding:34px 40px 42px;
+  background-image:
+    linear-gradient(to right,var(--grid-line) 1px,transparent 1px),
+    linear-gradient(to bottom,var(--grid-line) 1px,transparent 1px);
+  background-size:var(--grid-size) var(--grid-size);
+}
+@media (prefers-reduced-motion: no-preference){
+  .sheet-overlay.is-open .sheet{ animation:fadeUp 320ms var(--ease) both; }
+}
+.sheet__head{ display:flex; justify-content:space-between; align-items:baseline;
+  border-bottom:1px solid var(--ink); padding-bottom:12px; margin-bottom:24px; }
+.sheet__eyebrow{ font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate); }
+.sheet__close{ appearance:none; background:none; border:none; cursor:pointer; white-space:nowrap;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track);
+  text-transform:uppercase; color:var(--slate); padding:2px 0; }
+.sheet__close:hover{ color:var(--terracotta); }
+.sheet__title{ font-family:var(--font-display); font-weight:400; font-size:38px; line-height:1.06;
+  color:var(--ink); margin:0 0 20px; letter-spacing:-0.01em; }
+.sheet__lede{ font-size:18px; line-height:1.5; color:var(--ink); margin:0 0 4px; max-width:62ch; }
+.srow{ display:grid; grid-template-columns:132px 1fr; gap:24px;
+  padding:17px 0; border-top:1px solid var(--hairline); }
+.srow:first-of-type{ margin-top:22px; }
+.skey{ font-family:var(--font-mono); font-size:10px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate); padding-top:3px; }
+.sval{ font-size:15px; line-height:1.58; color:var(--ink-80); }
+.sval b{ color:var(--ink); font-weight:600; }
+.sval i{ color:var(--ink); }
+.sval code{ font-family:var(--font-mono); font-size:12.5px; color:var(--ink); background:var(--paper-deep); padding:1px 5px; }
+.spec{ display:grid; grid-template-columns:1fr 1fr; margin:28px 0 0; border:1px solid var(--hairline); border-bottom:none; }
+.spec div{ padding:11px 14px; border-right:1px solid var(--hairline); border-bottom:1px solid var(--hairline);
+  font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track); }
+.spec div:nth-child(2n){ border-right:none; }
+.spec span{ display:block; color:var(--slate); font-size:9px; letter-spacing:var(--mono-track-w); margin-bottom:5px; }
+.spec b{ color:var(--ink); font-weight:500; }
+.excerpt{ margin:24px 0 0; padding:16px 18px; background:var(--paper-deep); border:1px solid var(--hairline);
+  font-family:var(--font-mono); font-size:12px; line-height:1.62; color:var(--ink-80); white-space:pre-wrap; overflow-x:auto; }
+.sheet__prep{ font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track);
+  text-transform:uppercase; color:var(--slate-40); margin:22px 0 0; padding-top:18px; border-top:1px solid var(--hairline); }
+
+/* appendix — tool index */
+.appx{ margin-top:32px; }
+.appx__h{ font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--ink); border-top:1px solid var(--ink); padding-top:14px; margin:0; }
+.toolgrp{ margin-top:22px; }
+.toolgrp__h{ font-family:var(--font-mono); font-size:10px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate); margin:0 0 2px; }
+.trow{ display:grid; grid-template-columns:196px 1fr; gap:16px; align-items:baseline;
+  padding:7px 0; border-top:1px solid var(--hairline); }
+.trow:first-of-type{ border-top:none; }
+.tname{ font-family:var(--font-mono); font-size:12px; color:var(--ink); word-break:break-word; }
+.tdesc{ font-size:13px; line-height:1.45; color:var(--ink-80); }
+
+/* output — report preview + download buttons */
+.report-fig{ margin:28px 0 0; border:1px solid var(--hairline); background:var(--paper); }
+.report-fig img{ display:block; width:100%; height:auto; max-height:430px; object-fit:cover; object-position:top center; }
+.report-cap{ font-family:var(--font-mono); font-size:9.5px; letter-spacing:var(--mono-track); text-transform:uppercase;
+  color:var(--slate); padding:8px 13px; border-top:1px solid var(--hairline); background:var(--paper-deep); }
+.downloads{ display:flex; gap:12px; flex-wrap:wrap; margin-top:18px; }
+.dl-link{ display:inline-flex; flex-direction:column; gap:6px; text-decoration:none; background:var(--paper);
+  border:1px solid var(--ink); padding:11px 16px;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track); text-transform:uppercase; color:var(--ink);
+  transition:border-color 140ms var(--ease), color 140ms var(--ease); }
+.dl-link:hover{ border-color:var(--terracotta); color:var(--terracotta); }
+.dl-top{ display:inline-flex; align-items:baseline; gap:8px; white-space:nowrap; }
+.dl-link .ar{ width:13px; flex:none; color:var(--terracotta); font-size:13px; }
+.dl-link .sz{ color:var(--slate-40); padding-left:21px; white-space:nowrap; }
+
+/* output — inline README (how to use it in Excel) */
+.readme{ margin-top:30px; }
+.readme-lede{ font-size:14px; line-height:1.55; color:var(--ink-80); margin:2px 0 16px; max-width:64ch; }
+.readme-lede b{ color:var(--ink); font-weight:600; }
+.step{ display:grid; grid-template-columns:26px 1fr; gap:14px; align-items:start; padding:9px 0; border-top:1px solid var(--hairline); }
+.step .n{ font-family:var(--font-mono); font-size:12px; color:var(--terracotta); padding-top:1px; }
+.step .d{ font-size:13.5px; line-height:1.5; color:var(--ink-80); }
+.step .t{ font-family:var(--font-mono); font-size:12px; color:var(--ink); }
+.readme-note{ font-size:12px; line-height:1.5; color:var(--slate); font-style:italic; margin-top:14px; padding-top:12px; border-top:1px solid var(--hairline); }
+
+/* ── PLATE CAPTION + SPECIFICATION (closing section) ────────────── */
+.plate-cap{
+  font-family:var(--font-display); font-style:italic; font-size:17px;
+  line-height:1.4; color:var(--slate); max-width:640px; margin:-44px 0 60px;
+}
+.spec-sheet{ margin:8px 0 24px; }
+.spec-mark{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate); display:block; margin:0 0 26px;
+}
+.spec-lede{ max-width:790px; font-size:18px; line-height:1.5; color:var(--ink); margin:0 0 40px; }
+.spec-lede i{ color:var(--ink); }
+.numstrip{
+  display:flex; flex-wrap:wrap;
+  border-top:1px solid var(--ink); border-bottom:1px solid var(--ink); margin:0 0 40px;
+}
+.num{ flex:1 1 100px; padding:18px 14px; border-right:1px solid var(--hairline); }
+.num:last-child{ border-right:none; }
+.num b{ display:block; font-family:var(--font-display); font-weight:400; font-size:30px; line-height:1; color:var(--ink); }
+.num span{ display:block; margin-top:9px; font-family:var(--font-mono); font-size:9.5px; letter-spacing:var(--mono-track-w); text-transform:uppercase; color:var(--slate); }
+.schedules{ display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--hairline); }
+.sched{ padding:22px 24px 24px; border-right:1px solid var(--hairline); }
+.sched:last-child{ border-right:none; }
+.sched__h{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--ink); margin:0 0 4px; padding-bottom:11px;
+  border-bottom:1px solid var(--ink);
+}
+.krow{ display:grid; grid-template-columns:90px 1fr; gap:12px; padding:9px 0; border-top:1px solid var(--hairline); }
+.krow:first-of-type{ border-top:none; padding-top:13px; }
+.krow span{ font-family:var(--font-mono); font-size:9px; letter-spacing:var(--mono-track-w); text-transform:uppercase; color:var(--slate); padding-top:3px; }
+.krow b{ font-family:var(--font-mono); font-size:11.5px; font-weight:500; color:var(--ink); line-height:1.45; }
+.krow--hl{ background:rgba(188,75,43,0.06); }
+.krow--hl span{ color:var(--terracotta-deep); }
+@media (max-width:880px){
+  .schedules{ grid-template-columns:1fr; }
+  .sched{ border-right:none; border-bottom:1px solid var(--hairline); }
+  .sched:last-child{ border-bottom:none; }
+}
+
+/* ── RESULT CARDS (F&T sample outputs) ──────────────────────────── */
+.results{ margin:8px 0 24px; }
+.resultgrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.resultgrid.cols-2{ grid-template-columns:repeat(2,1fr); max-width:840px; margin-left:auto; margin-right:auto; }
+.result-card{ position:relative; display:flex; flex-direction:column; text-align:left;
+  appearance:none; cursor:pointer; border:1px solid var(--ink); background:var(--paper);
+  padding:22px 22px 18px; transition:border-color 160ms var(--ease); }
+.result-card:hover, .result-card:focus-visible{ border-color:var(--terracotta); outline:none; }
+.rc-eyebrow{ font-family:var(--font-mono); font-size:10px; letter-spacing:var(--mono-track-w);
+  text-transform:uppercase; color:var(--slate); }
+.rc-title{ font-family:var(--font-display); font-weight:400; font-size:27px; line-height:1.04;
+  color:var(--ink); margin:10px 0 8px; letter-spacing:-0.01em; }
+.rc-sub{ font-size:13px; line-height:1.46; color:var(--ink-80); margin:0 0 16px; }
+.rc-preview{ position:relative; font-family:var(--font-mono); font-size:10.5px; line-height:1.52;
+  color:var(--ink-80); background:var(--paper-deep); border:1px solid var(--hairline);
+  padding:13px 14px 16px; margin:0 0 16px; height:158px; overflow:hidden; white-space:pre; }
+.rc-preview::after{ content:''; position:absolute; left:0; right:0; bottom:0; height:42px;
+  background:linear-gradient(to bottom,rgba(236,230,217,0),var(--paper-deep)); }
+.rc-open{ margin-top:auto; font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track);
+  text-transform:uppercase; color:var(--terracotta); display:inline-flex; align-items:center; gap:8px; }
+.result-card:hover .rc-open, .result-card:focus-visible .rc-open{ color:var(--terracotta-deep); }
+.rc-open .ar{ font-size:13px; }
+@media (max-width:880px){ .resultgrid{ grid-template-columns:1fr; } }
+
+/* ── FOOTER ─────────────────────────────────────────────────────── */
+.foot{ border-top:1px solid var(--ink); padding:22px 0 40px; }
+.foot p{ font-family:var(--font-mono); font-size:11px; letter-spacing:var(--mono-track);
+  text-transform:uppercase; color:var(--slate-40); margin:0; }
+
+/* ── SVG TYPE HELPERS ───────────────────────────────────────────── */
+.s-mono{ font-family:var(--font-mono); }
+.s-serif{ font-family:var(--font-display); }
+text{ paint-order:stroke; }
+
+/* ── MOTION ─────────────────────────────────────────────────────── */
+@keyframes drawIn{ from{stroke-dashoffset:1;} to{stroke-dashoffset:0;} }
+@keyframes fadeUp{ from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+@keyframes riseIn{ from{transform:translateY(12px);} to{transform:translateY(0);} }
+
+.draw{ stroke-dasharray:1; stroke-dashoffset:0; }   /* resting = fully drawn */
+.fade{ }                                            /* resting = visible    */
+
+@media (prefers-reduced-motion: no-preference){
+  .reveal{ animation:riseIn 520ms var(--ease) both; animation-delay:calc(var(--i,0)*90ms); }
+  .play .draw{
+    animation:drawIn var(--d,820ms) var(--ease) both;
+    animation-delay:calc(var(--i,0)*var(--step,150ms) + var(--base,120ms));
+  }
+  .play .fade{
+    opacity:0;
+    animation:fadeUp 560ms var(--ease) forwards;
+    animation-delay:calc(var(--i,0)*var(--step,150ms) + var(--base,120ms));
+  }
+}
+
+@media (max-width:880px){
+  :root{ --page-margin:32px; }
+  .hero{ grid-template-columns:1fr; gap:28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── TABS ──────────────────────────────────────────────────────── -->
+<nav class="tabsbar">
+  <div class="wrap">
+    <button class="tab" id="tab-val" role="tab" aria-selected="true" aria-controls="panel-val">
+      <span class="idx">01</span>Valuation</button>
+    <button class="tab" id="tab-ft" role="tab" aria-selected="false" aria-controls="panel-ft">
+      <span class="idx">02</span>Fundamental &amp; Technical</button>
+  </div>
+</nav>
+
+<!-- ── PANELS ────────────────────────────────────────────────────── -->
+<div class="wrap">
+
+  <!-- ===== VALUATION ===== -->
+  <section class="panel is-active" id="panel-val" role="tabpanel" aria-labelledby="tab-val">
+    <div class="intro-row">
+      <p class="intro">
+        <span class="lead-mark">Valuation — the autonomous analyst</span>
+        An autonomous valuation agent that runs a stock like a real-life investment committee — five autonomous analysts research, debate and agree the inputs before it builds a DCF valuation model.
+      </p>
+      <a class="repo-cta" href="https://github.com/CobbFu/valuation-project" target="_blank" rel="noopener">
+        <span class="repo-cta__eyebrow">Open source · GitHub</span>
+        <span class="repo-cta__path">CobbFu / valuation-project</span>
+        <span class="repo-cta__go">View the repository <span class="ar">&#8599;</span></span>
+      </a>
+    </div>
+
+    <p class="plate-hint"><span class="pm">+</span> Click any node to open its detail sheet</p>
+
+    <!-- ───────── PLATE 01 · SYSTEM ARCHITECTURE ───────── -->
+    <figure class="plate" id="plate01">
+      <span class="tick tl"></span><span class="tick tr"></span>
+      <span class="tick bl"></span><span class="tick br"></span>
+      <div class="plate__body">
+        <svg viewBox="0 0 960 624" role="img" aria-label="System architecture drawn as a building section: a central agent node connected to MCP tool layer, memory, custom RAG, data feeds and output. Each node is clickable and opens a detail sheet.">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--ink)" stroke-width="1"/>
+            </marker>
+            <marker id="arx" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--terracotta)" stroke-width="1"/>
+            </marker>
+          </defs>
+
+          <!-- ground line + hatch foundation -->
+          <g stroke="var(--ink)" fill="none">
+            <line class="draw" pathLength="1" style="--i:0" x1="116" y1="512" x2="844" y2="512" stroke-width="1"/>
+          </g>
+          <g stroke="var(--slate-40)" stroke-width="1">
+            <line x1="148" y1="512" x2="134" y2="526"/><line x1="184" y1="512" x2="170" y2="526"/>
+            <line x1="220" y1="512" x2="206" y2="526"/><line x1="256" y1="512" x2="242" y2="526"/>
+            <line x1="700" y1="512" x2="686" y2="526"/><line x1="736" y1="512" x2="722" y2="526"/>
+            <line x1="772" y1="512" x2="758" y2="526"/><line x1="808" y1="512" x2="794" y2="526"/>
+          </g>
+
+          <!-- DATA foundation (footing) -->
+          <rect class="draw" pathLength="1" style="--i:1" x="300" y="524" width="360" height="56" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:1" x="314" y="542" font-size="10" letter-spacing="1.4" font-weight="600" fill="var(--ink)">API DATA · MARKET FEEDS</text>
+          <text class="s-mono fade" style="--i:1" x="480" y="566" font-size="13" letter-spacing="1" text-anchor="middle" fill="var(--ink)">SEC&#160;&#160;·&#160;&#160;FMP&#160;&#160;·&#160;&#160;yfinance&#160;&#160;·&#160;&#160;FRED</text>
+
+          <!-- MCP TOOL LAYER -->
+          <text class="s-mono fade" style="--i:2" x="300" y="392" font-size="10" letter-spacing="1.6" font-weight="600" fill="var(--ink)">MCP TOOL LAYER</text>
+          <rect class="draw" pathLength="1" style="--i:2" x="300" y="402" width="360" height="68" fill="none" stroke="var(--ink)"/>
+          <g fill="none" stroke="var(--ink)">
+            <rect class="draw" pathLength="1" style="--i:2.4" x="312" y="416" width="52" height="40"/>
+            <rect class="draw" pathLength="1" style="--i:2.7" x="368" y="416" width="52" height="40"/>
+            <rect class="draw" pathLength="1" style="--i:3.0" x="424" y="416" width="52" height="40"/>
+            <rect class="draw" pathLength="1" style="--i:3.3" x="480" y="416" width="52" height="40"/>
+            <rect class="draw" pathLength="1" style="--i:3.6" x="536" y="416" width="52" height="40"/>
+            <rect class="draw" pathLength="1" style="--i:3.9" x="592" y="416" width="52" height="40"/>
+          </g>
+          <g class="s-mono fade" style="--i:3.2" font-size="8" letter-spacing="0.2" text-anchor="middle" fill="var(--ink-80)">
+            <text x="338" y="440">fetch</text><text x="394" y="440">models</text>
+            <text x="450" y="440">deliberate</text><text x="506" y="440">montecarlo</text>
+            <text x="562" y="440">damodaran</text><text x="618" y="440">workbook</text>
+          </g>
+          <text class="s-mono fade" style="--i:4" x="480" y="492" font-size="11" letter-spacing="0.8" text-anchor="middle" fill="var(--terracotta)">21 tools · the agent's hands</text>
+
+          <!-- AGENT core (double wall) -->
+          <rect class="draw" pathLength="1" style="--i:5" x="384" y="232" width="192" height="120" fill="rgba(188,75,43,0.05)" stroke="var(--ink)"/>
+          <rect class="draw" pathLength="1" style="--i:5.3" x="392" y="240" width="176" height="104" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:5.4" x="480" y="270" font-size="10" letter-spacing="2" text-anchor="middle" fill="var(--slate)">· THE BRAIN ·</text>
+          <text class="s-mono fade" style="--i:5.5" x="480" y="298" font-size="21" letter-spacing="1" text-anchor="middle" fill="var(--ink)">AGENT</text>
+          <text class="s-mono fade" style="--i:5.6" x="480" y="320" font-size="12" letter-spacing="0.5" text-anchor="middle" fill="var(--ink-80)">LLM + harness</text>
+
+          <!-- MEMORY wing (left) -->
+          <rect class="draw" pathLength="1" style="--i:6" x="72" y="232" width="232" height="120" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:6" x="86" y="254" font-size="10" letter-spacing="1.6" font-weight="600" fill="var(--ink)">MEMORY LAYER</text>
+          <text class="s-mono fade" style="--i:6.2" x="86" y="290" font-size="13" letter-spacing="0.4" fill="var(--ink)">soul.md · CLAUDE.md</text>
+          <text class="s-mono fade" style="--i:6.3" x="86" y="316" font-size="12" letter-spacing="0.4" fill="var(--ink-80)">+ 3 knowledge stores</text>
+          <text class="s-mono fade" style="--i:6.4" x="86" y="340" font-size="10" letter-spacing="1.2" fill="var(--slate)">git-versioned</text>
+
+          <!-- CUSTOM RAG wing (right) -->
+          <rect class="draw" pathLength="1" style="--i:7" x="656" y="232" width="232" height="120" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:7" x="670" y="254" font-size="10" letter-spacing="1.6" font-weight="600" fill="var(--ink)">CUSTOM RAG</text>
+          <text class="s-mono fade" style="--i:7.2" x="670" y="288" font-size="12" letter-spacing="0.4" fill="var(--ink-80)">Damodaran corpus</text>
+          <text class="s-mono fade" style="--i:7.4" x="670" y="316" font-size="13" letter-spacing="0.4" fill="var(--ink-80)">3,649 chunks</text>
+
+          <!-- OUTPUT (roof) -->
+          <rect class="draw" pathLength="1" style="--i:8" x="356" y="96" width="248" height="58" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:8" x="480" y="118" font-size="10" letter-spacing="2" text-anchor="middle" font-weight="600" fill="var(--ink)">OUTPUT</text>
+          <text class="s-serif fade" style="--i:8.2" x="480" y="142" font-size="19" font-style="italic" text-anchor="middle" fill="var(--ink)">cited Excel valuations</text>
+
+          <!-- leaders -->
+          <g fill="none" stroke="var(--ink)" stroke-width="1" marker-end="url(#ar)">
+            <line class="draw" pathLength="1" style="--i:9"  x1="480" y1="524" x2="480" y2="472"/>
+            <line class="draw" pathLength="1" style="--i:9.3" x1="480" y1="402" x2="480" y2="354"/>
+            <line class="draw" pathLength="1" style="--i:9.6" x1="304" y1="292" x2="382" y2="292"/>
+            <line class="draw" pathLength="1" style="--i:9.9" x1="656" y1="292" x2="578" y2="292"/>
+            <line class="draw" pathLength="1" style="--i:10.2" x1="480" y1="232" x2="480" y2="156"/>
+          </g>
+
+          <!-- margin callouts removed — the detail sheets carry these points -->
+
+          <!-- ===== continuation: the output keeps going in Excel ===== -->
+          <g>
+            <rect class="draw" pathLength="1" style="--i:13" x="358" y="22" width="244" height="44" fill="rgba(188,75,43,0.06)" stroke="var(--terracotta)"/>
+            <text class="s-mono fade" style="--i:13.2" x="480" y="42" font-size="10.5" letter-spacing="1.2" text-anchor="middle" fill="var(--terracotta-deep)">&#8635; CONTINUE IN EXCEL</text>
+            <text class="s-mono fade" style="--i:13.2" x="480" y="57" font-size="8.5" letter-spacing="0.6" text-anchor="middle" fill="var(--slate)">Claude-in-Excel · the sheet stays live</text>
+            <line class="draw" pathLength="1" style="--i:13.4" x1="480" y1="95" x2="480" y2="70" fill="none" stroke="var(--terracotta)" stroke-width="1.3" marker-end="url(#arx)"/>
+          </g>
+
+          <!-- ===== open markers (terracotta "+" = expandable) ===== -->
+          <g class="openmarks s-mono" font-size="12" text-anchor="middle" fill="var(--terracotta)">
+            <text x="588" y="116">+</text>
+            <text x="560" y="250">+</text>
+            <text x="288" y="250">+</text>
+            <text x="872" y="250">+</text>
+            <text x="651" y="415">+</text>
+            <text x="646" y="540">+</text>
+          </g>
+          <!-- ===== clickable hotspots (topmost so they capture clicks) ===== -->
+          <g class="hotspots">
+            <rect class="hot" data-node="output" tabindex="0" role="button" aria-label="Open detail: Output" x="356" y="96"  width="248" height="58"></rect>
+            <rect class="hot" data-node="agent"  tabindex="0" role="button" aria-label="Open detail: The agent" x="384" y="232" width="192" height="120"></rect>
+            <rect class="hot" data-node="memory" tabindex="0" role="button" aria-label="Open detail: Memory layer" x="72"  y="232" width="232" height="120"></rect>
+            <rect class="hot" data-node="rag"    tabindex="0" role="button" aria-label="Open detail: Custom RAG" x="656" y="232" width="232" height="120"></rect>
+            <rect class="hot" data-node="mcp"    tabindex="0" role="button" aria-label="Open detail: MCP tool layer" x="300" y="402" width="360" height="68"></rect>
+            <rect class="hot" data-node="data"   tabindex="0" role="button" aria-label="Open detail: Data feeds" x="300" y="524" width="360" height="56"></rect>
+          </g>
+        </svg>
+      </div>
+      <div class="titleblock">
+        <div class="tb-main"><span class="no">PLATE 01</span><span class="ti">System Architecture</span></div>
+      </div>
+    </figure>
+
+    <p class="plate-hint"><span class="pm">+</span> Click any seat to open its detail sheet</p>
+
+    <!-- ───────── PLATE 02 · DELIBERATION CHAMBER ───────── -->
+    <figure class="plate" id="plate02">
+      <span class="tick tl"></span><span class="tick tr"></span>
+      <span class="tick bl"></span><span class="tick br"></span>
+      <div class="plate__body">
+        <svg viewBox="0 0 960 600" role="img" aria-label="The deliberation chamber drawn as a room plan seen from above: five seated agents around a table, debate arrows crossing the table, a synthesizer at the head, and a verdict exiting through a doorway.">
+          <defs>
+            <marker id="db" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+              <path d="M0 1 L9 5 L0 9" fill="none" stroke="var(--ink-80)" stroke-width="1"/>
+            </marker>
+            <marker id="vr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M0 0 L9 5 L0 10 Z" fill="var(--terracotta)"/>
+            </marker>
+          </defs>
+
+          <!-- room walls (gap = doorway on right wall) -->
+          <path class="draw" pathLength="1" style="--i:0;--d:1000ms"
+                d="M56 56 H820 V264 M820 336 V544 H56 V56"
+                fill="none" stroke="var(--ink)" stroke-width="1"/>
+          <!-- door jambs + swing -->
+          <g style="--i:0.6">
+            <line class="draw" pathLength="1" style="--i:0.6" x1="820" y1="264" x2="748" y2="264" stroke="var(--ink)" stroke-width="1"/>
+            <path class="draw" pathLength="1" style="--i:0.6" d="M748 264 A 72 72 0 0 1 820 336" fill="none" stroke="var(--slate-40)" stroke-width="1" stroke-dasharray="3 3"/>
+          </g>
+
+          <!-- table -->
+          <rect class="draw" pathLength="1" style="--i:0.3;--d:900ms" x="270" y="205" width="300" height="190" fill="var(--paper-deep)" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:0.4" x="420" y="304" font-size="9" letter-spacing="2.4" text-anchor="middle" fill="var(--slate-40)">THE TABLE</text>
+
+          <!-- ===== SEATS (draw in first) ===== -->
+          <!-- ANALYST (top-left) -->
+          <g>
+            <rect class="draw" pathLength="1" style="--i:1" x="292" y="132" width="96" height="46" fill="none" stroke="var(--ink)"/>
+            <line class="draw" pathLength="1" style="--i:1" x1="292" y1="132" x2="388" y2="132" stroke="var(--ink)" stroke-width="2"/>
+            <text class="s-mono fade" style="--i:1" x="340" y="122" font-size="9.5" letter-spacing="1.4" text-anchor="middle" fill="var(--slate)">DCF</text>
+            <text class="s-mono fade" style="--i:1" x="340" y="161" font-size="12" letter-spacing="0.8" text-anchor="middle" fill="var(--ink)">ANALYST</text>
+          </g>
+          <!-- CHALLENGER (top-right) -->
+          <g>
+            <rect class="draw" pathLength="1" style="--i:2" x="452" y="132" width="96" height="46" fill="none" stroke="var(--ink)"/>
+            <line class="draw" pathLength="1" style="--i:2" x1="452" y1="132" x2="548" y2="132" stroke="var(--ink)" stroke-width="2"/>
+            <text class="s-mono fade" style="--i:2" x="500" y="122" font-size="9.5" letter-spacing="1.4" text-anchor="middle" fill="var(--slate)">RELATIVE VALUE</text>
+            <text class="s-mono fade" style="--i:2" x="500" y="161" font-size="12" letter-spacing="0.8" text-anchor="middle" fill="var(--ink)">CHALLENGER</text>
+          </g>
+          <!-- RISK-PM (bottom-left) -->
+          <g>
+            <rect class="draw" pathLength="1" style="--i:3" x="292" y="422" width="96" height="46" fill="none" stroke="var(--ink)"/>
+            <line class="draw" pathLength="1" style="--i:3" x1="292" y1="468" x2="388" y2="468" stroke="var(--ink)" stroke-width="2"/>
+            <text class="s-mono fade" style="--i:3" x="340" y="451" font-size="12" letter-spacing="0.8" text-anchor="middle" fill="var(--ink)">RISK-PM</text>
+            <text class="s-mono fade" style="--i:3" x="340" y="486" font-size="9.5" letter-spacing="1.4" text-anchor="middle" fill="var(--slate)">SCENARIO &amp; SENS.</text>
+          </g>
+          <!-- CONTRARIAN (bottom-right) -->
+          <g>
+            <rect class="draw" pathLength="1" style="--i:4" x="452" y="422" width="96" height="46" fill="none" stroke="var(--ink)"/>
+            <line class="draw" pathLength="1" style="--i:4" x1="452" y1="468" x2="548" y2="468" stroke="var(--ink)" stroke-width="2"/>
+            <text class="s-mono fade" style="--i:4" x="500" y="451" font-size="11.5" letter-spacing="0.6" text-anchor="middle" fill="var(--ink)">CONTRARIAN</text>
+            <text class="s-mono fade" style="--i:4" x="500" y="486" font-size="9.5" letter-spacing="1.4" text-anchor="middle" fill="var(--slate)">BASE RATES</text>
+          </g>
+
+          <!-- ===== DEBATE ARROWS (stroke in one at a time) ===== -->
+          <g fill="none" stroke="var(--ink-80)" stroke-width="1" marker-start="url(#db)" marker-end="url(#db)">
+            <path class="draw" pathLength="1" style="--i:5.0;--d:640ms;--step:170ms" d="M348 205 Q 468 300 492 395"/>
+            <path class="draw" pathLength="1" style="--i:6.0;--d:640ms;--step:170ms" d="M492 205 Q 372 300 348 395"/>
+            <path class="draw" pathLength="1" style="--i:7.0;--d:640ms;--step:170ms" d="M334 205 Q 312 300 334 395"/>
+            <path class="draw" pathLength="1" style="--i:8.0;--d:640ms;--step:170ms" d="M506 205 Q 528 300 506 395"/>
+          </g>
+
+          <!-- ===== COLLECTION lines into synthesizer (slate, dashed) ===== -->
+          <g fill="none" stroke="var(--slate)" stroke-width="1" stroke-dasharray="2 4">
+            <path class="draw" pathLength="1" style="--i:9.0;--d:520ms;--step:120ms" d="M388 196 Q 520 220 612 290"/>
+            <path class="draw" pathLength="1" style="--i:9.5;--d:520ms;--step:120ms" d="M548 188 Q 600 230 614 286"/>
+            <path class="draw" pathLength="1" style="--i:10.0;--d:520ms;--step:120ms" d="M388 404 Q 520 380 612 310"/>
+            <path class="draw" pathLength="1" style="--i:10.5;--d:520ms;--step:120ms" d="M548 412 Q 600 370 614 314"/>
+          </g>
+
+          <!-- ===== SYNTHESIZER node (terracotta, resolves last) ===== -->
+          <rect class="draw" pathLength="1" style="--i:11.4;--d:760ms;--step:120ms" x="620" y="262" width="76" height="76" fill="rgba(188,75,43,0.07)" stroke="var(--terracotta)"/>
+          <text class="s-mono fade" style="--i:11.6;--step:120ms" x="658" y="294" font-size="10" letter-spacing="0.4" text-anchor="middle" fill="var(--terracotta-deep)">SYNTHESIZER</text>
+          <text class="s-mono fade" style="--i:11.6;--step:120ms" x="658" y="310" font-size="9" letter-spacing="1.4" text-anchor="middle" fill="var(--slate)">DECISION</text>
+          <text class="s-mono fade" style="--i:11.7;--step:120ms" x="658" y="252" font-size="8.5" letter-spacing="1.6" text-anchor="middle" fill="var(--slate-40)">AT THE HEAD</text>
+
+          <!-- ===== VERDICT line exits the door (terracotta) ===== -->
+          <line class="draw" pathLength="1" style="--i:12.4;--d:820ms;--step:120ms" x1="696" y1="300" x2="934" y2="300" stroke="var(--terracotta)" stroke-width="1.5" marker-end="url(#vr)"/>
+          <text class="s-mono fade" style="--i:12.7;--step:120ms" x="824" y="290" font-size="11" letter-spacing="1" fill="var(--terracotta-deep)">verdict → PM</text>
+          <text class="s-mono fade" style="--i:12.7;--step:120ms" x="828" y="318" font-size="8.5" letter-spacing="1.8" fill="var(--slate-40)">THRESHOLD</text>
+
+          <!-- ===== open markers (terracotta "+" = expandable) ===== -->
+          <g class="openmarks s-mono" font-size="12" text-anchor="middle" fill="var(--terracotta)">
+            <text x="379" y="145">+</text>
+            <text x="539" y="145">+</text>
+            <text x="379" y="437">+</text>
+            <text x="539" y="437">+</text>
+            <text x="687" y="279">+</text>
+          </g>
+          <!-- ===== clickable hotspots (topmost so they capture clicks) ===== -->
+          <g class="hotspots">
+            <rect class="hot" data-node="analyst"     tabindex="0" role="button" aria-label="Open detail: Analyst" x="286" y="108" width="106" height="76"></rect>
+            <rect class="hot" data-node="challenger"  tabindex="0" role="button" aria-label="Open detail: Challenger" x="446" y="108" width="106" height="76"></rect>
+            <rect class="hot" data-node="riskpm"      tabindex="0" role="button" aria-label="Open detail: Risk-PM" x="286" y="416" width="106" height="80"></rect>
+            <rect class="hot" data-node="contrarian"  tabindex="0" role="button" aria-label="Open detail: Contrarian" x="446" y="416" width="106" height="80"></rect>
+            <rect class="hot" data-node="synthesizer" tabindex="0" role="button" aria-label="Open detail: Synthesizer" x="614" y="246" width="88" height="100"></rect>
+          </g>
+        </svg>
+      </div>
+      <div class="titleblock">
+        <div class="tb-main"><span class="no">PLATE 02</span><span class="ti">Deliberation Chamber</span></div>
+      </div>
+    </figure>
+
+    <!-- ───────── SPECIFICATION (closing section) ───────── -->
+    <section class="spec-sheet">
+      <p class="spec-mark">Specification — built &amp; run</p>
+
+      <div class="numstrip">
+        <div class="num"><b>73</b><span>commits</span></div>
+        <div class="num"><b>68</b><span>plans</span></div>
+        <div class="num"><b>66</b><span>bugs fixed</span></div>
+        <div class="num"><b>~1,059</b><span>tests</span></div>
+        <div class="num"><b>91</b><span>work sessions</span></div>
+        <div class="num"><b>21</b><span>MCP tools</span></div>
+        <div class="num"><b>3,649</b><span>RAG chunks</span></div>
+      </div>
+
+      <div class="schedules">
+        <div class="sched">
+          <p class="sched__h">The stack</p>
+          <div class="krow"><span>Runtime</span><b>Python 3.11 · Claude Code</b></div>
+          <div class="krow"><span>Protocol</span><b>MCP · FastMCP server</b></div>
+          <div class="krow"><span>Knowledge</span><b>ChromaDB + sentence-transformers</b></div>
+          <div class="krow"><span>Output</span><b>openpyxl / xlwings → Excel</b></div>
+          <div class="krow"><span>Data</span><b>FMP · EDGAR · yfinance · FRED</b></div>
+          <div class="krow"><span>Comms</span><b>Telegram · approve / reject</b></div>
+        </div>
+        <div class="sched">
+          <p class="sched__h">The agent&rsquo;s harness</p>
+          <div class="krow"><span>Tools</span><b>21 MCP tools</b></div>
+          <div class="krow"><span>Sub-agents</span><b>5 deliberation personas · /deliberate-team</b></div>
+          <div class="krow"><span>Memory</span><b>soul.md + git-versioned stores</b></div>
+          <div class="krow"><span>Knowledge</span><b>3,649-chunk Damodaran RAG</b></div>
+          <div class="krow"><span>Scheduling</span><b>16 cron + 30-min heartbeat</b></div>
+          <div class="krow"><span>Governance</span><b>agent proposes · PM signs (IC chair)</b></div>
+        </div>
+        <div class="sched">
+          <p class="sched__h">Skills used</p>
+          <div class="krow"><span>Prime</span><b>/prime · /prime-light</b></div>
+          <div class="krow"><span>Plan</span><b>/vib · /plan-feature</b></div>
+          <div class="krow"><span>Pivot loop</span><b>plan → execute → review → validate</b></div>
+          <div class="krow krow--hl"><span>Validate</span><b>/validate · /code-review · code-reviewer</b></div>
+          <div class="krow"><span>Ship</span><b>/commit · /doc</b></div>
+          <div class="krow"><span>Surface</span><b>15 commands · 7 sub-agents · 30 skills</b></div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ===== FUNDAMENTAL & TECHNICAL ===== -->
+  <section class="panel" id="panel-ft" role="tabpanel" aria-labelledby="tab-ft">
+    <div class="intro-row">
+      <p class="intro">
+        <span class="lead-mark">Fundamental &amp; Technical — the markets copilot</span>
+        An always-on equity desk that reads the tape against the books: fundamentals set the direction, the technicals set the timing. Three scanners hunt the universe, a regime gate calls the play, and a compiled knowledge wiki keeps every judgement grounded.
+      </p>
+      <a class="repo-cta" href="https://github.com/CobbFu/fundamental-and-technical-public" target="_blank" rel="noopener">
+        <span class="repo-cta__eyebrow">Open source · GitHub</span>
+        <span class="repo-cta__path">CobbFu / fundamental-and-technical-public</span>
+        <span class="repo-cta__go">View the repository <span class="ar">&#8599;</span></span>
+      </a>
+    </div>
+
+    <p class="plate-hint"><span class="pm">+</span> Click any node to open its detail sheet</p>
+
+    <!-- ───────── PLATE 03 · THE DESK ───────── -->
+    <figure class="plate" id="plate03">
+      <span class="tick tl"></span><span class="tick tr"></span>
+      <span class="tick bl"></span><span class="tick br"></span>
+      <div class="plate__body">
+        <svg viewBox="0 0 960 600" role="img" aria-label="The desk drawn as a pipeline: three scanners feed a 40-name tracker, a regime gate calls the play, and a verdict exits — fundamentals feeding direction from above, TradingView timing from below. Each node is clickable.">
+          <defs>
+            <marker id="ft-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--ink)" stroke-width="1"/>
+            </marker>
+            <marker id="ft-arx" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--terracotta)" stroke-width="1"/>
+            </marker>
+          </defs>
+
+          <!-- TOP feeder · FUNDAMENTAL · DIRECTION -->
+          <rect class="draw" pathLength="1" style="--i:0" x="300" y="74" width="360" height="48" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:0.2" x="480" y="97" font-size="10" letter-spacing="1.6" text-anchor="middle" font-weight="600" fill="var(--ink)">FUNDAMENTAL · DIRECTION</text>
+          <text class="s-mono fade" style="--i:0.3" x="480" y="112" font-size="9" letter-spacing="0.6" text-anchor="middle" fill="var(--slate)">the knowledge wiki — what to own</text>
+
+          <!-- SCANNERS -->
+          <text class="s-mono fade" style="--i:1" x="64" y="198" font-size="10" letter-spacing="1.6" font-weight="600" fill="var(--ink)">SCANNERS</text>
+          <g fill="none" stroke="var(--ink)">
+            <rect class="draw" pathLength="1" style="--i:1.1" x="64" y="210" width="180" height="56"/>
+            <rect class="draw" pathLength="1" style="--i:1.3" x="64" y="288" width="180" height="56"/>
+            <rect class="draw" pathLength="1" style="--i:1.5" x="64" y="366" width="180" height="56"/>
+          </g>
+          <g class="s-mono fade">
+            <text style="--i:1.2" x="80" y="235" font-size="12" letter-spacing="0.6" fill="var(--ink)">MOMENTUM</text>
+            <text style="--i:1.2" x="80" y="253" font-size="9" letter-spacing="0.3" fill="var(--slate)">~903 · already running</text>
+            <text style="--i:1.4" x="80" y="313" font-size="12" letter-spacing="0.6" fill="var(--ink)">CASCADE</text>
+            <text style="--i:1.4" x="80" y="331" font-size="9" letter-spacing="0.3" fill="var(--slate)">7 themes · tier breadth</text>
+            <text style="--i:1.6" x="80" y="391" font-size="12" letter-spacing="0.6" fill="var(--ink)">EARLY</text>
+            <text style="--i:1.6" x="80" y="409" font-size="9" letter-spacing="0.3" fill="var(--slate)">~1,500 · pre-breakout</text>
+          </g>
+
+          <!-- TRACKER -->
+          <rect class="draw" pathLength="1" style="--i:3" x="300" y="250" width="180" height="120" fill="rgba(188,75,43,0.04)" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:3.2" x="390" y="284" font-size="10" letter-spacing="2" text-anchor="middle" fill="var(--slate)">· THE BOOK ·</text>
+          <text class="s-mono fade" style="--i:3.3" x="390" y="309" font-size="16" letter-spacing="0.6" text-anchor="middle" fill="var(--ink)">40-NAME</text>
+          <text class="s-mono fade" style="--i:3.3" x="390" y="328" font-size="16" letter-spacing="0.6" text-anchor="middle" fill="var(--ink)">TRACKER</text>
+          <text class="s-mono fade" style="--i:3.4" x="390" y="349" font-size="9" letter-spacing="0.6" text-anchor="middle" fill="var(--slate)">verdict diffing</text>
+
+          <!-- REGIME GATE -->
+          <rect class="draw" pathLength="1" style="--i:4" x="540" y="250" width="170" height="120" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:4.2" x="625" y="285" font-size="11" letter-spacing="1" text-anchor="middle" font-weight="600" fill="var(--ink)">REGIME GATE</text>
+          <text class="s-mono fade" style="--i:4.3" x="625" y="301" font-size="9" letter-spacing="0.4" text-anchor="middle" fill="var(--slate)">Weinstein Stage 2</text>
+          <line class="draw" pathLength="1" style="--i:4.4" x1="556" y1="316" x2="694" y2="316" stroke="var(--hairline)"/>
+          <text class="s-mono fade" style="--i:4.5" x="625" y="335" font-size="9" letter-spacing="0.3" text-anchor="middle" fill="var(--ink-80)">trend-follow ↑</text>
+          <text class="s-mono fade" style="--i:4.5" x="625" y="351" font-size="9" letter-spacing="0.3" text-anchor="middle" fill="var(--ink-80)">mean-revert ↓</text>
+
+          <!-- VERDICT -->
+          <rect class="draw" pathLength="1" style="--i:5" x="770" y="268" width="128" height="84" fill="none" stroke="var(--terracotta)"/>
+          <text class="s-mono fade" style="--i:5.2" x="834" y="298" font-size="11" letter-spacing="1" text-anchor="middle" fill="var(--terracotta-deep)">VERDICT</text>
+          <text class="s-mono fade" style="--i:5.3" x="834" y="318" font-size="10" letter-spacing="0.6" text-anchor="middle" fill="var(--ink)">BUY · WATCH</text>
+          <text class="s-mono fade" style="--i:5.3" x="834" y="333" font-size="10" letter-spacing="0.6" text-anchor="middle" fill="var(--ink)">TRIM · EXIT</text>
+          <text class="s-mono fade" style="--i:5.4" x="834" y="348" font-size="8.5" letter-spacing="0.4" text-anchor="middle" fill="var(--slate)">prev → new</text>
+
+          <!-- BOTTOM feeder · TECHNICAL · TIMING -->
+          <rect class="draw" pathLength="1" style="--i:6" x="300" y="486" width="360" height="48" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:6.2" x="480" y="509" font-size="10" letter-spacing="1.6" text-anchor="middle" font-weight="600" fill="var(--ink)">TECHNICAL · TIMING</text>
+          <text class="s-mono fade" style="--i:6.3" x="480" y="524" font-size="9" letter-spacing="0.6" text-anchor="middle" fill="var(--slate)">TradingView MCP · live 1D / 1W / 4H</text>
+
+          <!-- leaders -->
+          <g fill="none" stroke="var(--ink)" stroke-width="1" marker-end="url(#ft-ar)">
+            <path class="draw" pathLength="1" style="--i:2"   d="M244 238 H 272 V 300 H 296"/>
+            <path class="draw" pathLength="1" style="--i:2.2" d="M244 316 H 296"/>
+            <path class="draw" pathLength="1" style="--i:2.4" d="M244 394 H 272 V 332 H 296"/>
+            <line class="draw" pathLength="1" style="--i:4.0" x1="480" y1="310" x2="536" y2="310"/>
+            <line class="draw" pathLength="1" style="--i:5.0" x1="710" y1="310" x2="766" y2="310"/>
+            <line class="draw" pathLength="1" style="--i:0.5" x1="390" y1="122" x2="390" y2="246"/>
+            <line class="draw" pathLength="1" style="--i:6.0" x1="625" y1="486" x2="625" y2="374"/>
+          </g>
+
+          <!-- open markers -->
+          <g class="openmarks s-mono" font-size="12" text-anchor="middle" fill="var(--terracotta)">
+            <text x="648" y="92">+</text>
+            <text x="232" y="204">+</text>
+            <text x="468" y="262">+</text>
+            <text x="698" y="262">+</text>
+            <text x="648" y="504">+</text>
+          </g>
+          <!-- hotspots -->
+          <g class="hotspots">
+            <rect class="hot" data-node="ft_thesis"   tabindex="0" role="button" aria-label="Open detail: Direction before timing" x="300" y="74"  width="360" height="48"></rect>
+            <rect class="hot" data-node="ft_scanners" tabindex="0" role="button" aria-label="Open detail: Scanners" x="64" y="210" width="180" height="212"></rect>
+            <rect class="hot" data-node="ft_tracker"  tabindex="0" role="button" aria-label="Open detail: Tracker" x="300" y="250" width="180" height="120"></rect>
+            <rect class="hot" data-node="ft_regime"   tabindex="0" role="button" aria-label="Open detail: Regime gate" x="540" y="250" width="170" height="120"></rect>
+            <rect class="hot" data-node="ft_tv"       tabindex="0" role="button" aria-label="Open detail: TradingView MCP" x="300" y="486" width="360" height="48"></rect>
+          </g>
+        </svg>
+      </div>
+      <div class="titleblock">
+        <div class="tb-main"><span class="no">PLATE 03</span><span class="ti">OpenClaw-Inspired Personal Agent</span></div>
+      </div>
+    </figure>
+
+    <!-- ───────── RESULTS · WHAT THE DESK PRODUCES ───────── -->
+    <section class="results">
+      <p class="spec-mark">What the desk produces — sample outputs</p>
+      <p class="plate-hint"><span class="pm">+</span> Click a card to expand the full output</p>
+      <div class="resultgrid">
+
+        <article class="result-card result-open" data-node="ft_out_briefing" tabindex="0" role="button" aria-label="Expand: the FT briefing">
+          <span class="rc-eyebrow">Output · daily</span>
+          <h4 class="rc-title">The FT briefing</h4>
+          <p class="rc-sub">A Damodaran-lens read of the morning FT e-paper, posted before the open.</p>
+          <pre class="rc-preview">FT e-paper briefing — Wed 10 Jun
+───
+• TSMC capex tops $50bn —
+  capacity ahead of demand
+• Apollo–Blackstone lead $35bn
+  OpenAI data-centre debt
+• GSK buys Nuvalent, $10.6bn (~35%)
+
+Damodaran lens: capex adds value
+only when ROIC clears WACC…</pre>
+          <span class="rc-open">Read the full briefing <span class="ar">+</span></span>
+        </article>
+
+        <article class="result-card result-open" data-node="ft_out_cascade" tabindex="0" role="button" aria-label="Expand: the cascade scan">
+          <span class="rc-eyebrow">Output · weekly</span>
+          <h4 class="rc-title">The cascade scan</h4>
+          <p class="rc-sub">Supply-chain tier breadth — a 3–6-month lead on the momentum radar.</p>
+          <pre class="rc-preview">Cascade scan — tier breadth
+───
+AI INFRA  GPU·Memory·Optical ACTIVE
+          → Power NEXT
+  Memory 3/3 &gt;50d: MU·WDC·SNDK
+  Optical 3/4:     COHR·VIAV·LITE
+SEMICAP   Litho·Etch·Test ACTIVE
+          → Materials NEXT…</pre>
+          <span class="rc-open">See the full scan <span class="ar">+</span></span>
+        </article>
+
+        <article class="result-card result-open" data-node="ft_out_momentum" tabindex="0" role="button" aria-label="Expand: the momentum radar">
+          <span class="rc-eyebrow">Output · weekly</span>
+          <h4 class="rc-title">The momentum radar</h4>
+          <p class="rc-sub">The Russell-1000 universe ranked by trailing momentum, stage and quality.</p>
+          <pre class="rc-preview">Momentum radar (R1000) — Tier 1
+regime: RISK-ON
+───
+WDC   +739%   EARLY   accel 1.7x
+MU    +497%   EARLY   accel 3.8x
+CIEN  +555%   LATE    stale
+STX   +511%   LATE    accel 4.4x…</pre>
+          <span class="rc-open">See the full radar <span class="ar">+</span></span>
+        </article>
+
+      </div>
+    </section>
+
+    <p class="plate-hint"><span class="pm">+</span> Click any node to open its detail sheet</p>
+
+    <!-- ───────── PLATE 04 · KNOWLEDGE LAYER ───────── -->
+    <figure class="plate" id="plate04">
+      <span class="tick tl"></span><span class="tick tr"></span>
+      <span class="tick bl"></span><span class="tick br"></span>
+      <div class="plate__body">
+        <svg viewBox="0 0 960 440" role="img" aria-label="The knowledge layer drawn as the shift from standard RAG to agentic RAG. Left: a passive vector store hands chunks to the model. Right: the agent drives a structured LLM wiki — index, topic, author, entity and source pages — navigating it at query and compounding it at ingest. Each block is clickable.">
+          <defs>
+            <marker id="k-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--ink)" stroke-width="1"/>
+            </marker>
+            <marker id="k-arx" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L9 5 L0 10" fill="none" stroke="var(--terracotta)" stroke-width="1"/>
+            </marker>
+          </defs>
+
+          <!-- LEFT · STANDARD RAG (passive) -->
+          <text class="s-mono fade" style="--i:0" x="44" y="42" font-size="9.5" letter-spacing="1.3" font-weight="600" fill="var(--slate)">STANDARD RAG · PASSIVE LOOKUP</text>
+          <text class="s-mono fade" style="--i:0.1" x="38" y="146" font-size="8" letter-spacing="0.3" fill="var(--slate)">query</text>
+          <line class="draw" pathLength="1" style="--i:0.15" x1="38" y1="156" x2="60" y2="156" fill="none" stroke="var(--slate)" stroke-width="1" marker-end="url(#k-ar)"/>
+          <rect class="draw" pathLength="1" style="--i:0.3" x="62" y="96" width="172" height="120" fill="none" stroke="var(--slate)"/>
+          <text class="s-mono fade" style="--i:0.4" x="76" y="120" font-size="10" letter-spacing="0.8" fill="var(--ink)">VECTOR STORE</text>
+          <text class="s-mono fade" style="--i:0.4" x="76" y="135" font-size="9" letter-spacing="0.3" fill="var(--slate)">3,649 chunks · MiniLM</text>
+          <g stroke="var(--slate-40)" fill="rgba(92,107,115,0.05)">
+            <rect class="draw" pathLength="1" style="--i:0.6" x="76" y="150" width="144" height="11"/>
+            <rect class="draw" pathLength="1" style="--i:0.7" x="76" y="167" width="144" height="11"/>
+            <rect class="draw" pathLength="1" style="--i:0.8" x="76" y="184" width="144" height="11"/>
+            <rect class="draw" pathLength="1" style="--i:0.9" x="76" y="201" width="144" height="11"/>
+          </g>
+          <text class="s-serif fade" style="--i:1.2" x="44" y="250" font-size="12.5" font-style="italic" fill="var(--slate)">passive lookup — chunks to the model;</text>
+          <text class="s-serif fade" style="--i:1.2" x="44" y="268" font-size="12.5" font-style="italic" fill="var(--slate)">nothing compounds. Our Valuation desk.</text>
+
+          <!-- CENTER · AGENTIC transition -->
+          <line class="draw" pathLength="1" style="--i:1.6" x1="252" y1="150" x2="356" y2="150" fill="none" stroke="var(--terracotta)" stroke-width="1.8" marker-end="url(#k-arx)"/>
+          <text class="s-mono fade" style="--i:1.7" x="300" y="138" font-size="10" letter-spacing="1.6" text-anchor="middle" fill="var(--terracotta-deep)">AGENTIC</text>
+          <text class="s-mono fade" style="--i:1.8" x="300" y="166" font-size="8" letter-spacing="0.3" text-anchor="middle" fill="var(--slate)">the agent drives</text>
+
+          <!-- RIGHT header -->
+          <text class="s-mono fade" style="--i:2" x="378" y="42" font-size="9.5" letter-spacing="1.2" font-weight="600" fill="var(--ink)">AGENTIC RAG · LLM WIKI</text>
+
+          <!-- AGENT (the driver) -->
+          <rect class="draw" pathLength="1" style="--i:2.3" x="378" y="108" width="120" height="96" fill="rgba(188,75,43,0.06)" stroke="var(--terracotta)"/>
+          <text class="s-mono fade" style="--i:2.4" x="438" y="134" font-size="8.5" letter-spacing="2" text-anchor="middle" fill="var(--slate)">· DRIVES ·</text>
+          <text class="s-mono fade" style="--i:2.5" x="438" y="160" font-size="17" letter-spacing="0.6" text-anchor="middle" fill="var(--ink)">AGENT</text>
+          <text class="s-mono fade" style="--i:2.6" x="438" y="182" font-size="8" letter-spacing="0.2" text-anchor="middle" fill="var(--slate)">navigate · compound</text>
+
+          <!-- raw drop zone -->
+          <rect class="draw" pathLength="1" style="--i:2.8" x="378" y="232" width="120" height="36" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:2.85" x="438" y="254" font-size="9" letter-spacing="0.3" text-anchor="middle" fill="var(--ink)">raw/ · drop zone</text>
+          <line class="draw" pathLength="1" style="--i:2.9" x1="438" y1="232" x2="438" y2="206" fill="none" stroke="var(--ink)" stroke-width="1" marker-end="url(#k-ar)"/>
+
+          <!-- LLM WIKI · INDEX (the map) -->
+          <rect class="draw" pathLength="1" style="--i:3" x="530" y="104" width="406" height="30" fill="rgba(188,75,43,0.06)" stroke="var(--terracotta)"/>
+          <text class="s-mono fade" style="--i:3.1" x="733" y="123" font-size="10" letter-spacing="1" text-anchor="middle" fill="var(--terracotta-deep)">INDEX.md · THE MAP</text>
+
+          <!-- topics/ -->
+          <rect class="draw" pathLength="1" style="--i:3.2" x="530" y="144" width="406" height="76" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:3.25" x="542" y="160" font-size="8.5" letter-spacing="0.4" font-weight="600" fill="var(--ink)">topics/ · the queryable layer · 10 pages</text>
+          <g fill="none" stroke="var(--ink-80)">
+            <rect class="draw" pathLength="1" style="--i:3.3" x="542" y="172" width="124" height="38"/>
+            <rect class="draw" pathLength="1" style="--i:3.35" x="676" y="172" width="124" height="38"/>
+            <rect class="draw" pathLength="1" style="--i:3.4" x="810" y="172" width="114" height="38"/>
+          </g>
+          <g class="s-mono fade" font-size="8" text-anchor="middle" fill="var(--ink-80)">
+            <text style="--i:3.3" x="604" y="188">margin</text><text style="--i:3.3" x="604" y="199">of safety</text>
+            <text style="--i:3.35" x="738" y="188">market</text><text style="--i:3.35" x="738" y="199">cycles</text>
+            <text style="--i:3.4" x="867" y="188">Mr.</text><text style="--i:3.4" x="867" y="199">Market</text>
+          </g>
+
+          <!-- authors / entities / comparisons -->
+          <rect class="draw" pathLength="1" style="--i:3.5" x="530" y="232" width="130" height="44" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:3.55" x="542" y="250" font-size="8.5" letter-spacing="0.3" fill="var(--ink)">authors/</text>
+          <text class="s-mono fade" style="--i:3.55" x="542" y="263" font-size="8" letter-spacing="0.2" fill="var(--slate)">Buffett · Marks</text>
+          <rect class="draw" pathLength="1" style="--i:3.6" x="668" y="232" width="130" height="44" fill="none" stroke="var(--ink)"/>
+          <text class="s-mono fade" style="--i:3.65" x="680" y="250" font-size="8.5" letter-spacing="0.3" fill="var(--ink)">entities/</text>
+          <text class="s-mono fade" style="--i:3.65" x="680" y="263" font-size="8" letter-spacing="0.2" fill="var(--slate)">Berkshire</text>
+          <rect class="draw" pathLength="1" style="--i:3.7" x="806" y="232" width="130" height="44" fill="none" stroke="var(--slate-40)"/>
+          <text class="s-mono fade" style="--i:3.75" x="818" y="250" font-size="8.5" letter-spacing="0.3" fill="var(--slate)">comparisons/</text>
+          <text class="s-mono fade" style="--i:3.75" x="818" y="263" font-size="8" letter-spacing="0.2" fill="var(--slate-40)">deferred</text>
+
+          <!-- sources/ -->
+          <rect class="draw" pathLength="1" style="--i:3.8" x="530" y="288" width="406" height="30" fill="none" stroke="var(--slate)"/>
+          <text class="s-mono fade" style="--i:3.85" x="733" y="307" font-size="8.5" letter-spacing="0.4" text-anchor="middle" fill="var(--slate)">sources/ · citation-only — 50 files</text>
+
+          <!-- schema strip -->
+          <rect class="draw" pathLength="1" style="--i:3.9" x="530" y="328" width="406" height="28" fill="none" stroke="var(--hairline)"/>
+          <text class="s-mono fade" style="--i:3.95" x="733" y="346" font-size="8" letter-spacing="0.4" text-anchor="middle" fill="var(--slate)">AGENTS · INDEX · LOG · ROUTING — the schema &amp; log</text>
+
+          <!-- loop arrows (agent ⇄ wiki) -->
+          <line class="draw" pathLength="1" style="--i:4.3" x1="500" y1="126" x2="526" y2="120" fill="none" stroke="var(--terracotta)" stroke-width="1.2" marker-start="url(#k-ar)" marker-end="url(#k-arx)"/>
+          <path class="draw" pathLength="1" style="--i:4.5" d="M500 192 C 516 240, 522 270, 528 298" fill="none" stroke="var(--terracotta)" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#k-arx)"/>
+
+          <!-- captions (explain the two loops) -->
+          <text class="s-serif fade" style="--i:5" x="530" y="380" font-size="12.5" font-style="italic" fill="var(--slate)">navigate at query: INDEX → topic → [[wikilink]] → cited answer.</text>
+          <text class="s-serif fade" style="--i:5.1" x="530" y="398" font-size="12.5" font-style="italic" fill="var(--slate)">compound at ingest: raw → synthesised topic &amp; source pages.</text>
+
+          <!-- open markers -->
+          <g class="openmarks s-mono" font-size="12" text-anchor="middle" fill="var(--terracotta)">
+            <text x="222" y="90">+</text>
+            <text x="486" y="126">+</text>
+            <text x="924" y="124">+</text>
+            <text x="912" y="162">+</text>
+            <text x="648" y="248">+</text>
+            <text x="786" y="248">+</text>
+            <text x="924" y="306">+</text>
+            <text x="490" y="243">+</text>
+          </g>
+          <!-- hotspots -->
+          <g class="hotspots">
+            <rect class="hot" data-node="ft_rag"          tabindex="0" role="button" aria-label="Open detail: Standard RAG" x="36" y="92" width="220" height="190"></rect>
+            <rect class="hot" data-node="ft_evolution"    tabindex="0" role="button" aria-label="Open detail: Agentic RAG — the agent" x="378" y="108" width="120" height="96"></rect>
+            <rect class="hot" data-node="ft_wiki_raw"     tabindex="0" role="button" aria-label="Open detail: raw drop zone" x="378" y="232" width="120" height="36"></rect>
+            <rect class="hot" data-node="ft_wiki_index"   tabindex="0" role="button" aria-label="Open detail: INDEX" x="530" y="104" width="406" height="30"></rect>
+            <rect class="hot" data-node="ft_wiki_topics"  tabindex="0" role="button" aria-label="Open detail: topics" x="530" y="144" width="406" height="76"></rect>
+            <rect class="hot" data-node="ft_wiki_authors" tabindex="0" role="button" aria-label="Open detail: authors" x="530" y="232" width="130" height="44"></rect>
+            <rect class="hot" data-node="ft_wiki_entities" tabindex="0" role="button" aria-label="Open detail: entities" x="668" y="232" width="130" height="44"></rect>
+            <rect class="hot" data-node="ft_wiki_sources" tabindex="0" role="button" aria-label="Open detail: sources" x="530" y="288" width="406" height="30"></rect>
+            <rect class="hot" data-node="ft_wiki_schema"  tabindex="0" role="button" aria-label="Open detail: schema" x="530" y="328" width="406" height="28"></rect>
+          </g>
+        </svg>
+      </div>
+      <div class="titleblock">
+        <div class="tb-main"><span class="no">PLATE 04</span><span class="ti">Agentic RAG · LLM Wiki</span></div>
+      </div>
+    </figure>
+
+    <!-- ───────── WIKI IN ACTION ───────── -->
+    <section class="results">
+      <p class="spec-mark">The wiki in action — real pages</p>
+      <p class="plate-hint"><span class="pm">+</span> Click a card to expand</p>
+      <div class="resultgrid cols-2">
+
+        <article class="result-card result-open" data-node="ft_wiki_page" tabindex="0" role="button" aria-label="Expand: a wiki topic page">
+          <span class="rc-eyebrow">Wiki · topic page</span>
+          <h4 class="rc-title">A synthesised page</h4>
+          <p class="rc-sub">Compiled once at ingest — synthesised prose, verbatim quotes and [[wikilinks]].</p>
+          <pre class="rc-preview">topics/mr-market-and-temperament.md
+───
+Graham’s allegory of Mr. Market:
+a manic-depressive partner who
+quotes prices daily. Exploit his
+mood — don’t predict it.
+
+ “Mr. Market is there to serve you,
+  not to guide you.”
+  — [[1987-berkshire-letter]]…</pre>
+          <span class="rc-open">Open the page <span class="ar">+</span></span>
+        </article>
+
+        <article class="result-card result-open" data-node="ft_wiki_ask" tabindex="0" role="button" aria-label="Expand: an ask-wiki exchange">
+          <span class="rc-eyebrow">Wiki · query</span>
+          <h4 class="rc-title">Ask the wiki</h4>
+          <p class="rc-sub">A query walks INDEX → topic → [[wikilink]] to a cited answer — and refuses to invent.</p>
+          <pre class="rc-preview">/ask-wiki  What does Marks say
+           about cycles?
+───
+No Marks sources ingested yet —
+the wiki won’t state positions for
+an author it hasn’t read.
+Refusing to extrapolate.
+
+→ ingest: “You Can’t Predict.
+  You Can Prepare.” (2001)…</pre>
+          <span class="rc-open">See the exchange <span class="ar">+</span></span>
+        </article>
+
+      </div>
+    </section>
+  </section>
+
+</div>
+
+<!-- ── DETAIL SHEET (modal) ───────────────────────────────────────── -->
+<div class="sheet-overlay" id="sheet" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <span class="tick tl"></span><span class="tick tr"></span>
+    <span class="tick bl"></span><span class="tick br"></span>
+    <div class="sheet__head">
+      <span class="sheet__eyebrow" id="sheet-eyebrow">Detail</span>
+      <button class="sheet__close" id="sheet-close" type="button">Close ✕ · esc</button>
+    </div>
+    <h3 class="sheet__title" id="sheet-title"></h3>
+    <div id="sheet-body"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ── Tab switching ──────────────────────────────────────────── */
+  var tabs = [document.getElementById('tab-val'), document.getElementById('tab-ft')];
+  var panels = { 'tab-val':'panel-val', 'tab-ft':'panel-ft' };
+  function selectTab(t){
+    tabs.forEach(function(tab){
+      var on = tab === t;
+      tab.setAttribute('aria-selected', on ? 'true' : 'false');
+      document.getElementById(panels[tab.id]).classList.toggle('is-active', on);
+    });
+    if(t.id === 'tab-val'){ replay(document.getElementById('plate02')); replay(document.getElementById('plate01')); }
+    if(t.id === 'tab-ft'){ replay(document.getElementById('plate03')); replay(document.getElementById('plate04')); }
+  }
+  tabs.forEach(function(t){ t.addEventListener('click', function(){ selectTab(t); }); });
+
+  /* ── Draw-in on first view (and replay helper) ──────────────── */
+  function play(el){ el.classList.add('play'); }
+  function replay(el){
+    if(!el) return;
+    el.classList.remove('play');
+    void el.offsetWidth;            /* force reflow to restart animations */
+    if(isVisible(el)) el.classList.add('play');
+  }
+  function isVisible(el){
+    var r = el.getBoundingClientRect();
+    return r.top < (window.innerHeight || 0) && r.bottom > 0
+        && el.offsetParent !== null;
+  }
+
+  var plates = [document.getElementById('plate01'), document.getElementById('plate02'),
+                document.getElementById('plate03'), document.getElementById('plate04')];
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ play(e.target); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.18 });
+    plates.forEach(function(p){ io.observe(p); });
+  } else {
+    plates.forEach(play);
+  }
+})();
+</script>
+
+<script>
+(function(){
+  /* ── Node detail sheets ─────────────────────────────────────── */
+  var prep = '<p class="sheet__prep">Full detail sheet in preparation.</p>';
+  var NODES = {
+    memory: {
+      eyebrow: 'Detail · Memory layer',
+      title: 'A mind kept in markdown',
+      html:
+        '<p class="sheet__lede">The agent’s memory isn’t a black box — it’s human-readable files under git. A self-model, an operating manual, three knowledge stores and a governance trail, loaded at the start of a run. Every change is a commit; any state can be rolled back.</p>' +
+        '<div class="spec">' +
+          '<div><span>Format</span><b>markdown + YAML</b></div>' +
+          '<div><span>Versioning</span><b>git · every change a commit</b></div>' +
+          '<div><span>Loaded</span><b>every session</b></div>' +
+          '<div><span>Backend</span><b>src/common/knowledge.py</b></div>' +
+        '</div>' +
+        '<div class="appx">' +
+          '<p class="appx__h">The memory layers</p>' +
+          '<div class="toolgrp">' +
+            '<div class="trow"><span class="tname">soul.md</span><span class="tdesc">the <b>self-model</b> — standing investment theses, PM preferences and the agent’s own calibration awareness</span></div>' +
+            '<div class="trow"><span class="tname">CLAUDE.md</span><span class="tdesc">the <b>operating manual</b> — design principles, methodology and personality; the standing frame for every session</span></div>' +
+            '<div class="trow"><span class="tname">operational/</span><span class="tdesc">hard-won lessons on API quirks, data-quality traps and pipeline bugs — read before every run</span></div>' +
+            '<div class="trow"><span class="tname">investment/</span><span class="tdesc">per-ticker memory — peer sets, model choices and the assumption patterns the PM has validated</span></div>' +
+            '<div class="trow"><span class="tname">calibration/</span><span class="tdesc">the <b>learning log</b> — monthly reflections that surface systematic bias and tighten the method</span></div>' +
+            '<div class="trow"><span class="tname">audit.jsonl</span><span class="tdesc">append-only record of every IC-approved write — the agent’s decisions stay auditable</span></div>' +
+            '<div class="trow"><span class="tname">standing state</span><span class="tdesc"><b>watchlist · portfolio · cascades</b> — the live book and demand-cascade thesis maps; read freely, changes are IC-gated</span></div>' +
+          '</div>' +
+        '</div>'
+    },
+    agent: {
+      eyebrow: 'Detail · The agent',
+      title: 'The harness around the model',
+      html:
+        '<p class="sheet__lede">The agent is one model — Claude, one session per task. Everything that turns that model into an autonomous analyst is the <i>harness</i>: the scaffolding around it. Agent = model + harness.</p>' +
+        '<div class="srow"><span class="skey">Harness, not context</span><div class="sval">Context engineering decides what the model <i>sees</i> each call. The harness is the whole runtime around it — the loop, the tools, sub-agents, memory, scheduling, governance. Context keeps the agent pointed the right way; the harness is what keeps it moving.</div></div>' +
+        '<div class="srow"><span class="skey">The host is thin</span><div class="sval">There is no bespoke agent loop in Python. The agent runs <i>inside Claude Code</i> as its host, session-per-task; the repo is tools, memory and prompts — not a daemon. <i>“The model is the agent; Python is infrastructure.”</i></div></div>' +
+        '<div class="spec">' +
+          '<div><span>Model</span><b>Claude</b></div>' +
+          '<div><span>Host</span><b>Claude Code</b></div>' +
+          '<div><span>Lifecycle</span><b>session-per-task</b></div>' +
+          '<div><span>Principle</span><b>model is the agent</b></div>' +
+        '</div>' +
+        '<div class="appx">' +
+          '<p class="appx__h">The harness layers</p>' +
+          '<div class="toolgrp">' +
+            '<div class="trow"><span class="tname">Runtime</span><span class="tdesc">runs inside Claude Code as host — session-per-task, a thin shell launcher, not a custom daemon</span></div>' +
+            '<div class="trow"><span class="tname">Tools</span><span class="tdesc">21 MCP tools — the agent’s hands</span></div>' +
+            '<div class="trow"><span class="tname">Memory</span><span class="tdesc">soul.md + git-versioned knowledge stores</span></div>' +
+            '<div class="trow"><span class="tname">Knowledge</span><span class="tdesc">the 3,649-chunk Damodaran RAG corpus</span></div>' +
+            '<div class="trow"><span class="tname">Sub-agents</span><span class="tdesc">a five-persona deliberation in one conversation, plus a /deliberate-team command that spawns real Task sub-agents</span></div>' +
+            '<div class="trow"><span class="tname">Scheduling</span><span class="tdesc">16 cron tasks + a 30-min heartbeat loop — always-on</span></div>' +
+            '<div class="trow"><span class="tname">Skills</span><span class="tdesc">a self-extension subsystem — create, activate, roll back capabilities</span></div>' +
+            '<div class="trow"><span class="tname">Governance</span><span class="tdesc">the agent proposes; the PM signs off as IC chair (read auto, write gated)</span></div>' +
+          '</div>' +
+        '</div>'
+    },
+    mcp: {
+      eyebrow: 'Detail · MCP tool layer',
+      title: 'The harness — capability, not control',
+      html:
+        '<p class="sheet__lede">Twenty-one capabilities, registered with <code>@mcp.tool()</code> and handed to the agent. The host never decides which to call — the agent reads the goal, picks the tool, and sequences the work itself.</p>' +
+        '<div class="srow"><span class="skey">The protocol</span><div class="sval"><b>MCP</b> — Model Context Protocol. One server, <code>src/mcp_server.py</code>, registers every capability with <code>@mcp.tool()</code>. The protocol standardises how a model <i>discovers, types and calls</i> a tool — the same interface any MCP-speaking model can consume.</div></div>' +
+        '<div class="srow"><span class="skey">We build the harness</span><div class="sval">We hand the agent capabilities, never a workflow. No routing logic sits in Python — the host is thin plumbing. <i>“The agent IS Claude — Python is infrastructure.”</i></div></div>' +
+        '<div class="srow"><span class="skey">The agent decides</span><div class="sval">Claude reads the goal, selects the tool, sequences the calls, reacts to the result, and retries. <b>Autonomy over orchestration</b> — give the model tools and a goal, and let it figure out the rest (the Bitter Lesson).</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Count</span><b>21 tools</b></div>' +
+          '<div><span>Server</span><b>src/mcp_server.py</b></div>' +
+          '<div><span>Protocol</span><b>@mcp.tool()</b></div>' +
+          '<div><span>Orchestration</span><b>the agent, not the host</b></div>' +
+        '</div>' +
+        '<pre class="excerpt">@mcp.tool()\ndef run_full_valuation(ticker: str) -> dict:\n    """Scout → Analyst → Modeler → Reviewer, end to end."""</pre>' +
+        '<div class="appx">' +
+          '<p class="appx__h">The 21 tools</p>' +
+          '<div class="toolgrp"><p class="toolgrp__h">Pipeline · 8</p>' +
+            '<div class="trow"><span class="tname">fetch_company_data</span><span class="tdesc">pulls filings, prices &amp; fundamentals for a ticker (Scout)</span></div>' +
+            '<div class="trow"><span class="tname">recommend_models</span><span class="tdesc">profiles the company, picks the Damodaran model (FCFF / DDM…)</span></div>' +
+            '<div class="trow"><span class="tname">suggest_assumptions</span><span class="tdesc">proposes base-case drivers — growth, margins, WACC inputs</span></div>' +
+            '<div class="trow"><span class="tname">prepare_deliberation</span><span class="tdesc">builds the five-perspective briefs that seed the debate</span></div>' +
+            '<div class="trow"><span class="tname">generate_workbook</span><span class="tdesc">writes the Excel model via the Claude-in-Excel bridge</span></div>' +
+            '<div class="trow"><span class="tname">validate_data</span><span class="tdesc">sanity-checks inputs before they reach the model</span></div>' +
+            '<div class="trow"><span class="tname">review_workbook</span><span class="tdesc">audits the finished model for errors (Reviewer)</span></div>' +
+            '<div class="trow"><span class="tname">run_full_valuation</span><span class="tdesc">runs Scout → Analyst → Modeler → Reviewer end to end</span></div>' +
+          '</div>' +
+          '<div class="toolgrp"><p class="toolgrp__h">Analytics · 9</p>' +
+            '<div class="trow"><span class="tname">run_scenarios</span><span class="tdesc">bull / base / bear on the drivers</span></div>' +
+            '<div class="trow"><span class="tname">run_options</span><span class="tdesc">Black-Scholes real-options valuation</span></div>' +
+            '<div class="trow"><span class="tname">run_montecarlo</span><span class="tdesc">10,000-path distribution on the output</span></div>' +
+            '<div class="trow"><span class="tname">run_multiples</span><span class="tdesc">relative valuation vs a peer set</span></div>' +
+            '<div class="trow"><span class="tname">extract_segments</span><span class="tdesc">splits revenue / earnings by business segment</span></div>' +
+            '<div class="trow"><span class="tname">fetch_holdings</span><span class="tdesc">pulls fund / ETF holdings for look-through</span></div>' +
+            '<div class="trow"><span class="tname">run_sotp</span><span class="tdesc">sum-of-the-parts valuation</span></div>' +
+            '<div class="trow"><span class="tname">reconcile_valuations</span><span class="tdesc">triangulates methods into a football-field range</span></div>' +
+            '<div class="trow"><span class="tname">query_damodaran</span><span class="tdesc">retrieves grounded passages from the Damodaran RAG corpus</span></div>' +
+          '</div>' +
+          '<div class="toolgrp"><p class="toolgrp__h">Scanners · 4</p>' +
+            '<div class="trow"><span class="tname">scan_ft_epaper</span><span class="tdesc">OCRs the FT e-paper, extracts a Damodaran-lens briefing</span></div>' +
+            '<div class="trow"><span class="tname">scan_momentum</span><span class="tdesc">momentum scan across the ~900-ticker universe</span></div>' +
+            '<div class="trow"><span class="tname">scan_fallen_angels</span><span class="tdesc">finds oversold quality / downgraded names</span></div>' +
+            '<div class="trow"><span class="tname">check_new_highs</span><span class="tdesc">flags portfolio names breaking new highs</span></div>' +
+          '</div>' +
+        '</div>'
+    },
+    rag: {
+      eyebrow: 'Detail · Custom RAG',
+      title: 'Custom RAG — every claim grounded',
+      html:
+        '<p class="sheet__lede">A local vector store of Aswath Damodaran’s published methodology — 3,649 chunks — so every analytical claim is anchored to a citable source, not the model’s memory.</p>' +
+        '<div class="srow"><span class="skey">What it is</span><div class="sval">A ChromaDB collection, <code>damodaran_methodology</code>, of 3,649 embedded chunks. Vectors are generated locally with sentence-transformers — entirely on-disk, no external RAG service.</div></div>' +
+        '<div class="srow"><span class="skey">What’s indexed</span><div class="sval">Damodaran’s blog posts, lecture &amp; webcast transcripts, PDF lecture notes, and valuation spreadsheets — his life’s methodology, made retrievable.</div></div>' +
+        '<div class="srow"><span class="skey">How it’s used</span><div class="sval">The <code>query_damodaran</code> tool retrieves the most relevant passages for a question; the agent reasons from them and cites them. Grounding over recall.</div></div>' +
+        '<div class="srow"><span class="skey">Why it matters</span><div class="sval">Valuation is methodology-bound. Pinning a claim to Damodaran’s own words turns <i>“the model thinks”</i> into <i>“the source says.”</i></div></div>' +
+        '<div class="spec">' +
+          '<div><span>Engine</span><b>ChromaDB + sentence-transformers</b></div>' +
+          '<div><span>Collection</span><b>damodaran_methodology</b></div>' +
+          '<div><span>Chunks</span><b>3,649</b></div>' +
+          '<div><span>Tool</span><b>query_damodaran</b></div>' +
+        '</div>' +
+        '<div class="appx">' +
+          '<p class="appx__h">Sources indexed</p>' +
+          '<div class="toolgrp">' +
+            '<div class="trow"><span class="tname">blog posts</span><span class="tdesc">233 sources</span></div>' +
+            '<div class="trow"><span class="tname">PDF lecture notes</span><span class="tdesc">215 sources</span></div>' +
+            '<div class="trow"><span class="tname">webcast transcripts</span><span class="tdesc">53 sources</span></div>' +
+            '<div class="trow"><span class="tname">valuation spreadsheets</span><span class="tdesc">29 sources</span></div>' +
+          '</div>' +
+        '</div>'
+    },
+    data: {
+      eyebrow: 'Detail · Market data',
+      title: 'API data — primary, then fallback',
+      html:
+        '<p class="sheet__lede">Five external APIs feed the agent. They are tiered — a primary source for each datum, a fallback when it fails, and graceful degradation so a missing feed never blocks the valuation.</p>' +
+        '<div class="srow"><span class="skey">The sources</span><div class="sval">Five clients: <b>FinanceToolkit</b> (FMP), <b>yfinance</b>, <b>fredapi</b> (FRED), <b>compdata</b> (Damodaran datasets) and <b>edgartools</b> (SEC / EDGAR). FMP and FRED need API keys; yfinance and the Damodaran datasets are keyless; EDGAR needs only a user-agent string.</div></div>' +
+        '<div class="srow"><span class="skey">Priority &amp; fallback</span><div class="sval">Each datum has a chain. Financials: <b>FMP → EDGAR → raise</b>. Company profile &amp; beta: <b>FMP → yfinance</b>. Industry benchmarks: <b>mapped industry → “Total Market” → empty</b>. Risk-free rate: <b>currency-specific FRED series → US 10Y</b>.</div></div>' +
+        '<div class="srow"><span class="skey">Graceful degradation</span><div class="sval">When a non-critical source fails, the agent logs it and carries on with partial data — price, macro and consensus all soft-fail to null rather than crash. Only missing financials (FMP <i>and</i> EDGAR) stops the run.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Sources</span><b>5 APIs</b></div>' +
+          '<div><span>Keyed</span><b>FMP · FRED</b></div>' +
+          '<div><span>Keyless</span><b>yfinance · Damodaran</b></div>' +
+          '<div><span>Hard block</span><b>financials only</b></div>' +
+        '</div>' +
+        '<pre class="excerpt">financials   FMP  →  EDGAR  →  raise\nprofile      FMP  →  yfinance\nbenchmarks   industry  →  “Total Market”  →  ∅\nrisk-free    FRED ccy series  →  US 10Y</pre>' +
+        '<div class="appx">' +
+          '<p class="appx__h">What each feed provides</p>' +
+          '<div class="toolgrp">' +
+            '<div class="trow"><span class="tname">FinanceToolkit (FMP)</span><span class="tdesc">income, balance sheet, cash flow, ratios, peers — <b>primary financials</b></span></div>' +
+            '<div class="trow"><span class="tname">edgartools (SEC)</span><span class="tdesc">10-K XBRL, Form 4 insider, segments — <b>fallback financials &amp; segments</b></span></div>' +
+            '<div class="trow"><span class="tname">yfinance</span><span class="tdesc">price, market cap, beta, analyst consensus, holdings — <b>primary price</b></span></div>' +
+            '<div class="trow"><span class="tname">fredapi (FRED)</span><span class="tdesc">risk-free rate, GDP, inflation, FX, credit spreads, VIX — <b>macro</b></span></div>' +
+            '<div class="trow"><span class="tname">compdata (Damodaran)</span><span class="tdesc">industry betas, cost of capital, margins, ERP, multiples — <b>benchmarks</b></span></div>' +
+          '</div>' +
+        '</div>'
+    },
+    output: {
+      eyebrow: 'Detail · Output',
+      title: 'Cited Excel — and what comes next',
+      html:
+        '<p class="sheet__lede">The pipeline writes a cited, Excel-native valuation — 24 so far. But the workbook is a handover, not a full stop: the work continues inside Excel with Claude-in-Excel.</p>' +
+        '<div class="srow"><span class="skey">What it produces</span><div class="sval">A multi-tab valuation workbook — MSFT’s has <b>23 sheets</b> (input, valuation output, scenarios, optionality, Monte Carlo, a DATA sheet of sourced financials) — plus a full written report, <b>bilingual</b> (English &amp; 中文). Each carries its model and data sources.</div></div>' +
+        '<div class="srow"><span class="skey">The bridge</span><div class="sval">The agent doesn’t format cells blind. An <b>INSTRUCTIONS</b> sheet is the handover — a step-by-step spec that Claude-in-Excel reads to build and edit the live model. <code>src/modeler/instructions_sheet.py</code>: <i>“the bridge between Claude Code and Claude-in-Excel.”</i></div></div>' +
+        '<div class="srow"><span class="skey">What continues</span><div class="sval">Open the workbook and keep going — change an assumption, add a scenario, re-run a tab, ask a question. The model stays live in the sheet; the conversation doesn’t end at export.</div></div>' +
+        '<div class="srow"><span class="skey">Cited</span><div class="sval">Every output footer names the method (FCFF, Damodaran) and the data sources (FMP · yfinance · Damodaran datasets). Defensible, not a black box.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Workbooks</span><b>24 generated</b></div>' +
+          '<div><span>Sheets</span><b>23 (MSFT)</b></div>' +
+          '<div><span>Bridge</span><b>INSTRUCTIONS sheet</b></div>' +
+          '<div><span>Reports</span><b>EN · 中文</b></div>' +
+        '</div>' +
+        '<div class="report-fig"><img src="assets/MSFT_report_preview.png" alt="Microsoft Corporation — Full DCF Valuation Report; verdict SELL" loading="lazy"><div class="report-cap">Sample output · MSFT — FCFF valuation · verdict SELL</div></div>' +
+        '<div class="readme">' +
+          '<p class="appx__h">How to use it · in Excel</p>' +
+          '<p class="readme-lede">Open the workbook with Claude-in-Excel. It’s built on <b>Damodaran’s own template</b> — 17 of the 23 tabs are his machinery; the agent adds six (DATA, INSTRUCTIONS, SCENARIOS, OPTIONALITY, CHANGELOG, EVOLUTION). Here’s the path through them.</p>' +
+          '<div class="step"><span class="n">1</span><div class="d"><span class="t">INSTRUCTIONS</span> — start here. The agent’s build brief: the thesis, every assumption and its source, and the WACC derivation, in plain English.</div></div>' +
+          '<div class="step"><span class="n">2</span><div class="d"><span class="t">DATA</span> — the sourced inputs: five years of income statement, balance sheet and cash flow (FMP / yfinance), each field tagged with source and date.</div></div>' +
+          '<div class="step"><span class="n">3</span><div class="d"><span class="t">Input sheet</span> — the live dials. Change a growth rate, a margin or a WACC component; every downstream tab recomputes.</div></div>' +
+          '<div class="step"><span class="n">4</span><div class="d"><span class="t">Valuation output</span> — the DCF result: year-by-year revenue, margins and terminal value rolling up to fair value.</div></div>' +
+          '<div class="step"><span class="n">5</span><div class="d"><span class="t">SCENARIOS · OPTIONALITY</span> — the range: bear / base / bull, plus the Black-Scholes growth-option overlay.</div></div>' +
+          '<div class="step"><span class="n">6</span><div class="d"><span class="t">Keep going</span> — ask Claude-in-Excel to re-run a tab, add a scenario or stress an assumption. CHANGELOG and EVOLUTION log system defaults vs. your final calls.</div></div>' +
+          '<p class="readme-note">Supporting tabs — Cost of Capital, Synthetic Rating, R&amp;D &amp; Operating-Lease converters, Country ERP, Industry Averages — are Damodaran’s standard machinery, feeding the core above.</p>' +
+        '</div>' +
+        '<div class="downloads">' +
+          '<a class="dl-link" href="assets/MSFT_valuation.xlsx" download><span class="dl-top"><span class="ar">&#8595;</span>MSFT_valuation.xlsx</span><span class="sz">23 tabs · 247 KB</span></a>' +
+          '<a class="dl-link" href="assets/MSFT_valuation_report.pdf" target="_blank" rel="noopener"><span class="dl-top"><span class="ar">&#8595;</span>Full report (PDF)</span><span class="sz">EN</span></a>' +
+          '<a class="dl-link" href="assets/MSFT_workbook_quickstart.pdf" target="_blank" rel="noopener"><span class="dl-top"><span class="ar">&#8595;</span>Quickstart</span><span class="sz">README PDF</span></a>' +
+        '</div>'
+    },
+    analyst: {
+      eyebrow: 'Detail · Deliberation · Analyst',
+      title: 'The Analyst — builds the case',
+      html:
+        '<p class="sheet__lede">The bull by construction. The Analyst owns the intrinsic case — the base-case DCF, the growth path, the margins and the WACC — and defends every input with a source.</p>' +
+        '<div class="srow"><span class="skey">Framework</span><div class="sval"><b>Intrinsic / DCF</b> — Damodaran FCFF, FCFE or DDM. Story first, then numbers: a narrative that has to survive being turned into cash flows.</div></div>' +
+        '<div class="srow"><span class="skey">Tools &amp; data</span><div class="sval"><code>recommend_models</code> picks the model · <code>suggest_assumptions</code> sets the drivers · <code>query_damodaran</code> grounds each one in the corpus. Fed by FMP / EDGAR financials, compdata betas and the FRED risk-free.</div></div>' +
+        '<div class="srow"><span class="skey">In the debate</span><div class="sval">Tables the base case the other four attack. Its discipline: no assumption enters the model without a citation behind it.</div></div>' +
+        '<div class="srow"><span class="skey">Why it&rsquo;s in the room</span><div class="sval">It will fall in love with its own story — so it never sits alone. The Challenger and Contrarian exist to keep its DCF honest.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Seat</span><b>Analyst</b></div>' +
+          '<div><span>Lens</span><b>intrinsic / DCF</b></div>' +
+          '<div><span>Key tools</span><b>recommend_models · query_damodaran</b></div>' +
+          '<div><span>Guards against</span><b>a story with no number</b></div>' +
+        '</div>'
+    },
+    challenger: {
+      eyebrow: 'Detail · Deliberation · Challenger',
+      title: 'The Challenger — what the market pays',
+      html:
+        '<p class="sheet__lede">Tests the intrinsic value against the price the market actually clears at — arguing from peer multiples and consensus, and making the DCF explain any gap.</p>' +
+        '<div class="srow"><span class="skey">Framework</span><div class="sval"><b>Relative value</b> — EV/EBITDA, P/E, EV/Sales against a peer set; the expectations already priced in.</div></div>' +
+        '<div class="srow"><span class="skey">Tools &amp; data</span><div class="sval"><code>run_multiples</code> vs peers · <code>extract_segments</code> + <code>run_sotp</code> for mixed businesses · <code>reconcile_valuations</code> for the football field. Fed by yfinance consensus and compdata industry multiples.</div></div>' +
+        '<div class="srow"><span class="skey">In the debate</span><div class="sval">&ldquo;Your DCF says $X; the market pays Y&times; — who&rsquo;s wrong?&rdquo; Forces the intrinsic case to name why it disagrees with every other investor.</div></div>' +
+        '<div class="srow"><span class="skey">Why it&rsquo;s in the room</span><div class="sval">Multiples encode a thousand investors&rsquo; priors. When intrinsic and relative diverge hard, that gap <i>is</i> the thesis — the Challenger makes the desk pick a side.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Seat</span><b>Challenger</b></div>' +
+          '<div><span>Lens</span><b>relative / multiples</b></div>' +
+          '<div><span>Key tools</span><b>run_multiples · reconcile_valuations</b></div>' +
+          '<div><span>Guards against</span><b>ignoring the tape</b></div>' +
+        '</div>'
+    },
+    riskpm: {
+      eyebrow: 'Detail · Deliberation · Risk-PM',
+      title: 'The Risk-PM — owns the downside',
+      html:
+        '<p class="sheet__lede">Sizes how wrong the base case can be, and what breaks it. The Risk-PM turns a point estimate into a distribution.</p>' +
+        '<div class="srow"><span class="skey">Framework</span><div class="sval"><b>Scenario &amp; sensitivity</b> — bull / base / bear, a full distribution, asymmetry and catalyst timing.</div></div>' +
+        '<div class="srow"><span class="skey">Tools &amp; data</span><div class="sval"><code>run_scenarios</code> for bull/base/bear · <code>run_montecarlo</code> for a 10,000-path distribution · <code>run_options</code> for Black-Scholes optionality · <code>validate_data</code> to catch a bad input before it propagates.</div></div>' +
+        '<div class="srow"><span class="skey">In the debate</span><div class="sval">Reframes one fair-value number as a range: &ldquo;here&rsquo;s the 10th-percentile outcome and the single driver that gets you there.&rdquo;</div></div>' +
+        '<div class="srow"><span class="skey">Why it&rsquo;s in the room</span><div class="sval">A single fair value is a lie of precision. The Risk-PM converts the debate into asymmetry — make-if-right vs lose-if-wrong — the only thing a PM actually sizes on.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Seat</span><b>Risk-PM</b></div>' +
+          '<div><span>Lens</span><b>scenario &amp; sensitivity</b></div>' +
+          '<div><span>Key tools</span><b>run_scenarios · run_montecarlo</b></div>' +
+          '<div><span>Guards against</span><b>false precision</b></div>' +
+        '</div>'
+    },
+    contrarian: {
+      eyebrow: 'Detail · Deliberation · Contrarian',
+      title: 'The Contrarian — the outside view',
+      html:
+        '<p class="sheet__lede">Constructs the opposite thesis on purpose. The Contrarian argues the bear case from historical base rates — how often a bet like this actually works.</p>' +
+        '<div class="srow"><span class="skey">Framework</span><div class="sval"><b>Base rates / outside view</b> — historical analogues and reference classes, not this company&rsquo;s story.</div></div>' +
+        '<div class="srow"><span class="skey">Tools &amp; data</span><div class="sval"><code>query_damodaran</code> for base rates, growth-decay and historical analogues · <code>run_multiples</code> as a mean-reversion check on where the price &ldquo;should&rdquo; sit.</div></div>' +
+        '<div class="srow"><span class="skey">In the debate</span><div class="sval">&ldquo;Forget this name — how often does a firm at this growth and margin sustain it? The base rate says otherwise.&rdquo;</div></div>' +
+        '<div class="srow"><span class="skey">Why it&rsquo;s in the room</span><div class="sval">Most valuation errors are inside-view errors: too much specific story, too little reference class. The Contrarian is the deliberate outside view — the lens that would have shorted every bubble.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Seat</span><b>Contrarian</b></div>' +
+          '<div><span>Lens</span><b>historical base rates</b></div>' +
+          '<div><span>Key tools</span><b>query_damodaran · run_multiples</b></div>' +
+          '<div><span>Guards against</span><b>inside-view bias</b></div>' +
+        '</div>'
+    },
+    synthesizer: {
+      eyebrow: 'Detail · Deliberation · Synthesizer',
+      title: 'The Synthesizer — frames the decision',
+      html:
+        '<p class="sheet__lede">Chairs the room. It doesn&rsquo;t add a sixth opinion — it resolves the four into a decision, and hands the agreed inputs to the model.</p>' +
+        '<div class="srow"><span class="skey">Framework</span><div class="sval"><b>Decision architecture</b> — frame the <i>remaining</i> disagreements as explicit PM decision points, each with its stakes.</div></div>' +
+        '<div class="srow"><span class="skey">Tools &amp; data</span><div class="sval"><code>reconcile_valuations</code> triangulates the methods into one range, then it writes the agreed assumptions that flow into <code>set_assumptions</code> → <code>generate_workbook</code>.</div></div>' +
+        '<div class="srow"><span class="skey">In the workflow</span><div class="sval">The deliberation sits between picking the model and setting the inputs. Where the four converge, the Synthesizer locks the assumption; where they don&rsquo;t, it surfaces the fork for the PM — the IC chair — to call.</div></div>' +
+        '<div class="srow"><span class="skey">Why it&rsquo;s in the room</span><div class="sval">Its discipline is refusing to manufacture false consensus. A real IC ends with a decision <i>and</i> a list of the bets you&rsquo;re knowingly making — and that list is what makes the final model auditable.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Seat</span><b>Synthesizer · at the head</b></div>' +
+          '<div><span>Lens</span><b>decision architecture</b></div>' +
+          '<div><span>Output</span><b>agreed assumptions → workbook</b></div>' +
+          '<div><span>Guards against</span><b>false consensus</b></div>' +
+        '</div>'
+    },
+
+    /* ===== FUNDAMENTAL & TECHNICAL — Plate 03 · The Desk ===== */
+    ft_thesis: {
+      eyebrow: 'Detail · The two-layer rule',
+      title: 'Direction before timing',
+      html:
+        '<p class="sheet__lede">One hard rule governs the whole desk: <b>fundamentals decide direction, technicals decide timing</b> — never the other way round. A name earns its place on the business first; the chart only decides <i>when</i> to act.</p>' +
+        '<div class="srow"><span class="skey">Direction</span><div class="sval">The fundamental case — quality, valuation, the demand-cascade thesis — sets <i>what</i> is worth owning. Grounded in the knowledge wiki (Plate 04), never re-derived from memory.</div></div>' +
+        '<div class="srow"><span class="skey">Timing</span><div class="sval">Only once direction is set does the technical layer — TradingView, the regime gate — decide <i>when</i>: probe, add, trim or exit.</div></div>' +
+        '<div class="srow"><span class="skey">Why it matters</span><div class="sval">Most blow-ups are one layer overriding the other: chasing a chart with no thesis, or averaging into a falling knife with no timing discipline. Separating the two keeps each honest.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Layer 1</span><b>fundamental · direction</b></div>' +
+          '<div><span>Layer 2</span><b>technical · timing</b></div>' +
+          '<div><span>Rule</span><b>direction before timing</b></div>' +
+          '<div><span>Engine</span><b>pure-function verdicts</b></div>' +
+        '</div>'
+    },
+    ft_scanners: {
+      eyebrow: 'Detail · Scanners',
+      title: 'Three ways to find a name',
+      html:
+        '<p class="sheet__lede">Three discovery engines, each blind to the others&rsquo; angle — so a name that shows up in two is the highest-conviction signal of all.</p>' +
+        '<div class="appx">' +
+          '<p class="appx__h">The scanners</p>' +
+          '<div class="toolgrp">' +
+            '<div class="trow"><span class="tname">momentum</span><span class="tdesc">a <b>~903-ticker</b> US universe (S&amp;P 500 + 400); 12-month trailing return, stage and F-Score — finds names <i>already running</i></span></div>' +
+            '<div class="trow"><span class="tname">cascade</span><span class="tdesc"><b>7 curated supply-chains</b> (54 tickers, 28 tiers); fires when ≥60% of a tier breaks its 50-day average → the tier flips ACTIVE, the next is flagged. A <b>3–6-month lead</b></span></div>' +
+            '<div class="trow"><span class="tname">early</span><span class="tdesc">the inverse of momentum — a <b>~1,500-ticker</b> wide universe (S&amp;P 500+400+600) hunting pre-breakout bases, rejecting anything already extended</span></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="spec">' +
+          '<div><span>Scanners</span><b>3</b></div>' +
+          '<div><span>Momentum</span><b>~903 tickers</b></div>' +
+          '<div><span>Cascade</span><b>7 themes · 54 tickers</b></div>' +
+          '<div><span>Early</span><b>~1,500 tickers</b></div>' +
+        '</div>'
+    },
+    ft_tracker: {
+      eyebrow: 'Detail · The tracker',
+      title: 'The live book',
+      html:
+        '<p class="sheet__lede">A working book of about <b>40 names</b>, capped on purpose. Every run re-reads each name and <i>diffs</i> its verdict against last time — so what surfaces is change, not noise.</p>' +
+        '<div class="srow"><span class="skey">What it holds</span><div class="sval">Per name: the thesis, conviction, target size and the kill-switch — the standing reason it&rsquo;s on the book.</div></div>' +
+        '<div class="srow"><span class="skey">Verdict diffing</span><div class="sval">Each refresh stores the new verdict, compares it to <code>previous_verdict</code>, and sets <code>verdict_changed</code>. The daily digest leads with an &ldquo;action required&rdquo; tier whenever a call flips <i>prev → new</i>.</div></div>' +
+        '<div class="srow"><span class="skey">Cadence</span><div class="sval">The morning ritual, <code>/track-refresh</code>, walks every entry over live TradingView data and writes the dated digest.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Names</span><b>~40 (capped)</b></div>' +
+          '<div><span>Refresh</span><b>daily</b></div>' +
+          '<div><span>Diff</span><b>prev → new</b></div>' +
+          '<div><span>Output</span><b>tiered digest</b></div>' +
+        '</div>'
+    },
+    ft_regime: {
+      eyebrow: 'Detail · Regime gate',
+      title: 'The single decision point',
+      html:
+        '<p class="sheet__lede">One gate branches the entire methodology. It asks a single question — is this a confirmed uptrend? — and routes everything that follows down one of two paths.</p>' +
+        '<div class="srow"><span class="skey">The gate</span><div class="sval"><b>Weinstein Stage 2</b>: price &gt; the 30-week moving average, the 30-WMA rising, and a positive 26-week return (the emergence test that catches post-drawdown turns the old 12-month gate missed).</div></div>' +
+        '<div class="srow"><span class="skey">Two paths</span><div class="sval"><b>True → trend-following</b> (EP probe → continuation → climax hold → first trim). <b>False → mean-reversion</b> (parabolic / pullback / decision-zone). Missing data defers conservatively to mean-reversion.</div></div>' +
+        '<div class="srow"><span class="skey">Discipline</span><div class="sval">The verdict engine is <i>pure functions — no I/O, no chart calls</i>; all data access lives outside it. A <b>climax veto</b> (a three-condition gate) can override a buy near a blow-off top.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Gate</span><b>Weinstein Stage 2</b></div>' +
+          '<div><span>True</span><b>trend-following</b></div>' +
+          '<div><span>False</span><b>mean-reversion</b></div>' +
+          '<div><span>Engine</span><b>pure functions · v4</b></div>' +
+        '</div>'
+    },
+    ft_tv: {
+      eyebrow: 'Detail · TradingView MCP',
+      title: 'The technical layer&rsquo;s eyes',
+      html:
+        '<p class="sheet__lede">Live chart data over the <b>TradingView MCP</b> — an MCP server that drives a real TradingView Desktop chart through the Chrome DevTools protocol. The timing layer reads from the actual tape, not a snapshot.</p>' +
+        '<div class="srow"><span class="skey">The server</span><div class="sval"><b>78 tools</b> over MCP/stdio — read chart state, pull study values and OHLCV, set symbol/timeframe, manage indicators. Wired once in <code>.mcp.json</code> and shared across the system (Plate 05).</div></div>' +
+        '<div class="srow"><span class="skey">Multi-timeframe</span><div class="sval">A read is mandatory across <b>1D + 1W + 4H</b> — daily for the setup, weekly for the regime, 4-hour for the entry — never a single frame.</div></div>' +
+        '<div class="srow"><span class="skey">The stack</span><div class="sval">A standard <b>7-indicator</b> read — Volume, EMA 20/50/200, RSI, MACD, Bollinger — auto-added to the chart if missing before anything is read.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Server</span><b>TradingView MCP</b></div>' +
+          '<div><span>Tools</span><b>78</b></div>' +
+          '<div><span>Timeframes</span><b>1D · 1W · 4H</b></div>' +
+          '<div><span>Indicators</span><b>7-stack</b></div>' +
+        '</div>'
+    },
+
+    /* ===== Plate 04 · Knowledge Layer (RAG → Wiki) ===== */
+    ft_rag: {
+      eyebrow: 'Detail · Standard RAG',
+      title: 'Standard RAG — the passive baseline',
+      html:
+        '<p class="sheet__lede">The baseline, and what the sibling Valuation system runs: a textbook vector RAG. Embed the corpus once; at query time, pull back the nearest raw chunks and hand them to the model. Retrieval is a passive lookup — the model sits downstream of a similarity search, with no say in what it gets.</p>' +
+        '<div class="srow"><span class="skey">How it works</span><div class="sval">A <b>ChromaDB</b> store of <b>3,649 chunks</b>, embedded with <code>all-MiniLM-L6-v2</code>. A query is embedded and the <b>top-5</b> nearest chunks (L2 distance) come back as raw text plus a citation.</div></div>' +
+        '<div class="srow"><span class="skey">What it returns</span><div class="sval">Fragments. The model re-synthesises an answer from those fragments <i>on every query</i> — the tool itself does no reasoning, ranking or summary.</div></div>' +
+        '<div class="srow"><span class="skey">The limit</span><div class="sval">Nothing it learns persists; each query rediscovers from scratch. And similarity search can&rsquo;t follow a cross-reference or a &ldquo;see also&rdquo; — it only knows what sits <i>near</i> in vector space.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Store</span><b>ChromaDB</b></div>' +
+          '<div><span>Chunks</span><b>3,649</b></div>' +
+          '<div><span>Retrieve</span><b>top-5 · L2</b></div>' +
+          '<div><span>Synthesis</span><b>at query, every time</b></div>' +
+        '</div>' +
+        '<pre class="excerpt">query → embed → nearest-k chunks → raw text + citation</pre>'
+    },
+    ft_evolution: {
+      eyebrow: 'Detail · Agentic RAG',
+      title: 'Agentic RAG — the agent is the retrieval',
+      html:
+        '<p class="sheet__lede">Standard RAG hands the model a pile of chunks and hopes. <b>Agentic RAG</b> puts the agent <i>inside</i> the retrieval loop — it reads the index, decides what to open, follows the links, answers with citations, and writes its synthesis back. Karpathy&rsquo;s framing: the wiki is &ldquo;agentic RAG with exactly one tool — the wiki itself.&rdquo;</p>' +
+        '<div class="srow"><span class="skey">The shift</span><div class="sval">In standard RAG, retrieval is a dumb function call and the model is a passive recipient. In agentic RAG, <b>the agent is the retrieval engine</b> — reasoning about where to look, not just embedding-and-fetching.</div></div>' +
+        '<div class="srow"><span class="skey">What changes</span><div class="sval">Synthesis moves from <b>query time</b> to <b>ingest time</b>. The result is a durable, human-readable, git-versioned artifact — not work redone on every call.</div></div>' +
+        '<div class="srow"><span class="skey">It compounds</span><div class="sval">Each ingest leaves the knowledge base better for the next question. A vector store is passive — the chunks just wait; nothing accumulates between queries.</div></div>' +
+        '<div class="srow"><span class="skey">The research</span><div class="sval">Verified against Karpathy&rsquo;s LLM-Wiki gist and reference implementations, and informed by the 2026 &ldquo;is RAG dead?&rdquo; debate — context-rot studies, GraphRAG, HippoRAG.</div></div>' +
+        '<div class="srow"><span class="skey">The honest take</span><div class="sval">Not &ldquo;RAG is dead&rdquo; — <i>complementary</i>. What&rsquo;s superseded is naïve single-vector cosine retrieval; keyword / BM25 search stays a supporting primitive. The load-bearing difference is <i>when</i> synthesis happens.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Model</span><b>compiler vs interpreter</b></div>' +
+          '<div><span>Persists</span><b>human-readable git pages</b></div>' +
+          '<div><span>vs RAG</span><b>re-derive each query</b></div>' +
+          '<div><span>Stance</span><b>complementary</b></div>' +
+        '</div>'
+    },
+    ft_wiki_index: {
+      eyebrow: 'Wiki · INDEX.md',
+      title: 'INDEX — the map',
+      html:
+        '<p class="sheet__lede">Every query starts here. The agent reads <code>AGENTS.md</code> (the rule book), then <code>INDEX.md</code> (this map), then navigates — by structure, not by similarity search.</p>' +
+        '<div class="srow"><span class="skey">What it is</span><div class="sval">A table of contents in <b>queryability order</b>: topics first (the answerable layer), then authors, entities, comparisons, and sources. Each line is a one-sentence summary + a <code>[[wikilink]]</code>.</div></div>' +
+        '<div class="srow"><span class="skey">Why a map, not a search</span><div class="sval">At this size, the agent reading the whole INDEX is faster and more faithful than maintaining routing rules. The structure <i>is</i> the retrieval system.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>File</span><b>INDEX.md</b></div>' +
+          '<div><span>Role</span><b>table of contents</b></div>' +
+          '<div><span>Read order</span><b>2nd · after AGENTS</b></div>' +
+          '<div><span>Retrieval</span><b>navigate, not embed</b></div>' +
+        '</div>'
+    },
+    ft_wiki_topics: {
+      eyebrow: 'Wiki · topics/',
+      title: 'The queryable layer',
+      html:
+        '<p class="sheet__lede">Synthesised concept pages — the agent&rsquo;s first stop for any question. A topic page is created only when a concept is plausibly cited by <b>≥2 investors</b>; single-author ideas live on the author page instead.</p>' +
+        '<div class="srow"><span class="skey">Structure</span><div class="sval">A definition + canonical framing, then a section per cited author with <b>verbatim quotes</b> and <code>[[source]]</code> links, closing with a <code>## Related</code> block. (See the full <i>Mr. Market</i> page in the card below.)</div></div>' +
+        '<div class="srow"><span class="skey">The 10 pages</span><div class="sval">margin-of-safety · intrinsic-value · owner-earnings · circle-of-competence · position-concentration · second-level-thinking · mr-market-and-temperament · cycles · drawdowns-and-temperament · wonderful-businesses-and-time.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Type</span><b>topic</b></div>' +
+          '<div><span>Count</span><b>10</b></div>' +
+          '<div><span>Created when</span><b>≥2 investors cite it</b></div>' +
+          '<div><span>Holds</span><b>quotes + [[wikilinks]]</b></div>' +
+        '</div>'
+    },
+    ft_wiki_authors: {
+      eyebrow: 'Wiki · authors/',
+      title: 'Per-investor worldviews',
+      html:
+        '<p class="sheet__lede">One investor&rsquo;s worldview, compiled as a digest — created on first ingest of that author, updated on every later one.</p>' +
+        '<div class="srow"><span class="skey">Contents</span><div class="sval">A one-paragraph bio, 5–10 core principles (each with a <code>[[source]]</code> citation), characteristic mental models, the failure modes they warn against, and a link table to every topic they shape.</div></div>' +
+        '<div class="srow"><span class="skey">The canon</span><div class="sval">Value investors — Buffett, Munger, Marks, Lynch, Graham. <b>Buffett and Marks</b> are ingested today; the rest are scaffolded, and the agent refuses to speak for an author it hasn&rsquo;t read.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Type</span><b>author</b></div>' +
+          '<div><span>Ingested</span><b>Buffett · Marks</b></div>' +
+          '<div><span>Created</span><b>on first ingest</b></div>' +
+          '<div><span>Updated</span><b>every re-ingest</b></div>' +
+        '</div>'
+    },
+    ft_wiki_entities: {
+      eyebrow: 'Wiki · entities/',
+      title: 'Firms & vehicles',
+      html:
+        '<p class="sheet__lede">A firm, fund or vehicle of substance — Berkshire, Oaktree, Magellan. Created only when <b>≥2 sources</b> discuss it substantively; a single mention is a footnote, not a page.</p>' +
+        '<div class="srow"><span class="skey">Today</span><div class="sval"><b>Berkshire Hathaway</b> — brief history, its role in Buffett&rsquo;s career, key case studies (insurance float, See&rsquo;s, Coca-Cola, the IBM mistake), with <code>[[wikilinks]]</code> to the authors and topics it anchors.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Type</span><b>entity</b></div>' +
+          '<div><span>Count</span><b>1 · Berkshire</b></div>' +
+          '<div><span>Created when</span><b>≥2 sources discuss it</b></div>' +
+          '<div><span>Else</span><b>a footnote</b></div>' +
+        '</div>'
+    },
+    ft_wiki_sources: {
+      eyebrow: 'Wiki · sources/',
+      title: 'Citation-only primary sources',
+      html:
+        '<p class="sheet__lede">Processed primary sources — <b>not</b> the queryable layer. They exist so that when a topic page makes a claim, its evidence is one <code>[[wikilink]]</code> away. Verbatim fidelity matters; light cleanup only, never heavy summary.</p>' +
+        '<div class="srow"><span class="skey">What&rsquo;s here</span><div class="sval"><b>50 files</b>: the Berkshire chairman&rsquo;s letters 1977–2024 (48), a Howard Marks book chapter, and a Buffett partnership-letter seed. Pathed <code>&lt;author&gt;/&lt;work&gt;/&lt;slug&gt;</code>.</div></div>' +
+        '<div class="srow"><span class="skey">How made</span><div class="sval">Only ever written by <code>/wiki-ingest</code> from a file in <code>raw/</code> — never by hand.</div></div>' +
+        '<div class="spec">' +
+          '<div><span>Type</span><b>source</b></div>' +
+          '<div><span>Count</span><b>50</b></div>' +
+          '<div><span>Role</span><b>citation, not query</b></div>' +
+          '<div><span>Fidelity</span><b>verbatim</b></div>' +
+        '</div>'
+    },
+    ft_wiki_schema: {
+      eyebrow: 'Wiki · the schema',
+      title: 'The load-bearing roots',
+      html:
+        '<p class="sheet__lede">The files that govern the wiki. Changing the schema means updating both skills — they are treated as load-bearing.</p>' +
+        '<div class="appx">' +
+          '<p class="appx__h">The roots</p>' +
+          '<div class="toolgrp">' +
+            '<div class="trow"><span class="tname">AGENTS.md</span><span class="tdesc">the <b>rule book</b> — page types, frontmatter, citation rules; read first, every session</span></div>' +
+            '<div class="trow"><span class="tname">INDEX.md</span><span class="tdesc">the <b>map</b> — table of contents; read second</span></div>' +
+            '<div class="trow"><span class="tname">LOG.md</span><span class="tdesc">append-only <b>operation log</b> — every ingest and validated query</span></div>' +
+            '<div class="trow"><span class="tname">ROUTING.md</span><span class="tdesc">deferred query-routing placeholder (Phase 2)</span></div>' +
+            '<div class="trow"><span class="tname">README.md</span><span class="tdesc">human orientation — not loaded by the skills</span></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="spec">' +
+          '<div><span>Rule book</span><b>AGENTS.md</b></div>' +
+          '<div><span>Map</span><b>INDEX.md</b></div>' +
+          '<div><span>Log</span><b>LOG.md</b></div>' +
+          '<div><span>Read order</span><b>AGENTS → INDEX → act</b></div>' +
+        '</div>'
+    },
+    ft_wiki_raw: {
+      eyebrow: 'Wiki · raw/',
+      title: 'The ingest drop zone',
+      html:
+        '<p class="sheet__lede">Where unprocessed sources land — a sibling of <code>wiki/</code>, outside the wiki proper. This is where <b>synthesis happens, once</b>.</p>' +
+        '<div class="appx">' +
+          '<p class="appx__h">/wiki-ingest — the write loop</p>' +
+          '<div class="toolgrp">' +
+            '<div class="trow"><span class="tname">1 · read the rules</span><span class="tdesc">load <code>AGENTS.md</code>, then read the raw file end to end</span></div>' +
+            '<div class="trow"><span class="tname">2 · capture</span><span class="tdesc">write a citation-only <code>source</code> page</span></div>' +
+            '<div class="trow"><span class="tname">3 · synthesise</span><span class="tdesc">rewrite every topic / author / entity page it touches — verbatim quotes + <code>[[source]]</code> links</span></div>' +
+            '<div class="trow"><span class="tname">4 · index + archive</span><span class="tdesc">update <code>INDEX.md</code> + <code>LOG.md</code>; move the file to <code>raw/processed/</code></span></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="spec">' +
+          '<div><span>Folder</span><b>raw/ (drop zone)</b></div>' +
+          '<div><span>Skill</span><b>/wiki-ingest</b></div>' +
+          '<div><span>Step</span><b>synthesise-at-ingest</b></div>' +
+          '<div><span>Archive</span><b>raw/processed/</b></div>' +
+        '</div>'
+    },
+
+    /* ===== Results · sample outputs ===== */
+    ft_out_briefing: {
+      eyebrow: 'Output · FT briefing',
+      title: 'The morning FT read',
+      html:
+        '<p class="sheet__lede">Before the open, the desk OCRs the FT e-paper, picks the stories that move things, and runs each through a Damodaran valuation lens — then posts the briefing to Telegram. A sample run:</p>' +
+        '<pre class="excerpt">FT e-paper briefing — Wednesday 10 June\n' +
+        'Pages p.1–22 · Damodaran RAG: capital intensity,\n' +
+        'private-credit cost of capital\n' +
+        '───\n' +
+        'KEY NEWS\n' +
+        '• TSMC capex record breaks $50bn (p.1)\n' +
+        '• Apollo–Blackstone lead $35bn OpenAI\n' +
+        '  data-centre debt (p.4)\n' +
+        '• GSK buys Nuvalent for $10.6bn, ~35% premium (p.9)\n' +
+        '───\n' +
+        'COMPANIES &amp; MARKETS\n' +
+        '1. TSMC capex tops $50bn (p.1)\n' +
+        '   Record spend, ~40% YoY — framed as a moat play\n' +
+        '   against EUV-constrained rivals.\n' +
+        '\n' +
+        '   Damodaran perspective: a capex surge is value-\n' +
+        '   additive only when incremental ROIC clears WACC.\n' +
+        '   Test the $50bn against TSMC&rsquo;s historical\n' +
+        '   reinvestment returns — not the demand narrative.\n' +
+        '\n' +
+        '   So what: capacity, not demand, is the variable now.</pre>' +
+        '<div class="spec">' +
+          '<div><span>Cadence</span><b>daily · pre-market</b></div>' +
+          '<div><span>Source</span><b>FT e-paper (OCR)</b></div>' +
+          '<div><span>Lens</span><b>Damodaran valuation</b></div>' +
+          '<div><span>Channel</span><b>Telegram</b></div>' +
+        '</div>' +
+        '<div class="downloads">' +
+          '<a class="dl-link" href="assets/FT_briefing_sample.pdf" target="_blank" rel="noopener"><span class="dl-top"><span class="ar">&#8595;</span>Full briefing (PDF)</span><span class="sz">representative · 10 Jun</span></a>' +
+        '</div>' +
+        '<p class="sheet__prep">Representative sample — structure and voice are the live template, grounded in a real 10 Jun run.</p>'
+    },
+    ft_out_cascade: {
+      eyebrow: 'Output · Cascade scan',
+      title: 'Supply-chain tier breadth',
+      html:
+        '<p class="sheet__lede">The cascade scan watches curated supply-chains for a breadth thrust: when ≥60% of a tier clears its 50-day average, the tier flips <b>ACTIVE</b> and the next is flagged <b>NEXT</b> — a 3–6-month lead on price momentum. A live run:</p>' +
+        '<pre class="excerpt">AI INFRASTRUCTURE CASCADE\n' +
+        'demand: hyperscaler AI capex $350B+\n' +
+        '\n' +
+        'Tier 1 · GPU — ACTIVE   (1/1 &gt; 50d MA)\n' +
+        '  NVDA   holding   +13% 3m\n' +
+        'Tier 2 · Memory — ACTIVE   (3/3 &gt; 50d MA)\n' +
+        '  MU  +136%     WDC  +98%     SNDK +165%\n' +
+        'Tier 3 · Optical — ACTIVE   (3/4 &gt; 50d MA)\n' +
+        '  COHR +54%     VIAV +64%    LITE +33%\n' +
+        'Tier 4 · Power — NEXT   (1/3 &gt; 50d MA)\n' +
+        '  POWL +66%     VRT  +11% (warming)\n' +
+        '\n' +
+        'When Power breadth crosses 60%, VRT + AEIS become\n' +
+        'the next-leg candidates. Tier breadth flips ~3–6\n' +
+        'months ahead of the momentum radar.</pre>' +
+        '<div class="spec">' +
+          '<div><span>Cadence</span><b>weekly</b></div>' +
+          '<div><span>Themes</span><b>7 · 54 tickers</b></div>' +
+          '<div><span>Trigger</span><b>≥60% &gt; 50-DMA</b></div>' +
+          '<div><span>Lead</span><b>3–6 months</b></div>' +
+        '</div>' +
+        '<div class="downloads">' +
+          '<a class="dl-link" href="assets/FT_cascade_scan.pdf" target="_blank" rel="noopener"><span class="dl-top"><span class="ar">&#8595;</span>Full scan (PDF)</span><span class="sz">7 cascades · 10 Jun</span></a>' +
+        '</div>' +
+        '<p class="sheet__prep">Live cached scan state · 10 Jun — public market breadth, no positions.</p>'
+    },
+    ft_out_momentum: {
+      eyebrow: 'Output · Momentum radar',
+      title: 'The universe, ranked',
+      html:
+        '<p class="sheet__lede">The momentum radar ranks the Russell-1000 universe by trailing return, stage and quality, tiered by conviction — the &ldquo;already-running&rdquo; complement to the early scanner. A live run:</p>' +
+        '<pre class="excerpt">MOMENTUM RADAR (Russell 1000) — week of 10 Jun\n' +
+        'universe ~1000 scanned · regime RISK-ON\n' +
+        '\n' +
+        'TIER 1 · top conviction\n' +
+        'name   view        12m     stage  accel  fresh\n' +
+        'WDC    Strong Buy  +739%   EARLY  1.7x   fresh\n' +
+        'SNDK   Strong Buy  +3323%  MID    1.2x   —\n' +
+        'CIEN   Buy         +555%   LATE   1.5x   stale\n' +
+        'LITE   Buy         +953%   LATE   0.8x   stale\n' +
+        'MU     Strong Buy  +497%   EARLY  3.8x   fresh\n' +
+        'STX    Strong Buy  +511%   LATE   4.4x   stale\n' +
+        '\n' +
+        'fundamentals   fwd P/E  FCF yld  F-Score\n' +
+        'MU             8.6      0.3%     8/9\n' +
+        'SNDK           9.0      0.9%     8/9\n' +
+        'WDC            29.1     1.2%     7/9\n' +
+        '\n' +
+        'stages: 2 early · 4 late   ·   fresh: MU, WDC</pre>' +
+        '<div class="spec">' +
+          '<div><span>Cadence</span><b>weekly</b></div>' +
+          '<div><span>Universe</span><b>~1,000 (R1000)</b></div>' +
+          '<div><span>Signals</span><b>12m · stage · F-Score</b></div>' +
+          '<div><span>Regime</span><b>RISK-ON / OFF</b></div>' +
+        '</div>' +
+        '<div class="downloads">' +
+          '<a class="dl-link" href="assets/FT_momentum_radar.pdf" target="_blank" rel="noopener"><span class="dl-top"><span class="ar">&#8595;</span>Full radar (PDF)</span><span class="sz">all tiers · 10 Jun</span></a>' +
+        '</div>' +
+        '<p class="sheet__prep">Live cached scan state · 10 Jun — public signals only.</p>'
+    },
+
+    /* ===== The wiki in action ===== */
+    ft_wiki_page: {
+      eyebrow: 'Wiki · Topic page',
+      title: 'A synthesised page',
+      html:
+        '<p class="sheet__lede">At ingest, raw sources are compiled into a topic page — synthesised prose, the verbatim quotes that back it, and <code>[[wikilinks]]</code> to related pages and citations. A real page from the wiki, <i>Mr. Market &amp; temperament</i>:</p>' +
+        '<pre class="excerpt"># Mr. Market and temperament\n\nGraham’s allegory of Mr. Market: a manic-\ndepressive partner who shows up daily quoting\nprices, sometimes wildly high and sometimes\nwildly low. The investor’s job is not to predict\nhis mood but to exploit it.\n\n## Warren Buffett — Berkshire era\n> Mr. Market is there to serve you, not to guide\n> you. It is his pocketbook, not his wisdom, that\n> you will find useful.\n  — [[sources/buffett/letters/1987-berkshire-letter]]\n\n> We simply attempt to be fearful when others are\n> greedy and to be greedy only when others are\n> fearful.\n  — [[sources/buffett/letters/1986-berkshire-letter]]\n\n## Related\n[[topics/margin-of-safety]] · [[topics/cycles]] ·\n[[topics/second-level-thinking]] · [[authors/buffett]]</pre>' +
+        '<div class="spec">' +
+          '<div><span>Type</span><b>topic page</b></div>' +
+          '<div><span>Built</span><b>synthesise-at-ingest</b></div>' +
+          '<div><span>Cites</span><b>Buffett · Marks</b></div>' +
+          '<div><span>Links</span><b>[[wikilinks]]</b></div>' +
+        '</div>' +
+        '<p class="sheet__prep">A verbatim page from the wiki — public Buffett / Marks methodology.</p>'
+    },
+    ft_wiki_ask: {
+      eyebrow: 'Wiki · Query',
+      title: 'Ask the wiki — navigate, don’t search',
+      html:
+        '<p class="sheet__lede">A query doesn’t embed-and-retrieve. The agent reads the INDEX, walks to the right topic, follows its <code>[[wikilinks]]</code>, and answers with citations — and it refuses to speak for an author it hasn’t ingested.</p>' +
+        '<pre class="excerpt">> /ask-wiki  What does Howard Marks say\n            about cycles?\n\nThe wiki has no Howard Marks sources ingested\nyet, so it cannot state Marks’s positions.\nRefusing to extrapolate — positions for\nun-ingested authors are not invented.\n\nSuggested next ingest: the 2001 memo\n“You Can’t Predict. You Can Prepare.”\n\n## Citations\n(none — the wiki is silent on this question)</pre>' +
+        '<div class="srow"><span class="skey">The guard</span><div class="sval">The strongest &ldquo;this is real&rdquo; signal: asked about Marks <i>before</i> any Marks source existed, it named the gap and suggested what to ingest — it did not invent a position. (Logged; Marks was ingested later the same day.)</div></div>' +
+        '<pre class="excerpt">> /ask-wiki  What is margin of safety?\n\nBuy below intrinsic value by a wide enough margin\nthat errors of judgement leave you whole —\nGraham’s principle, inherited across the wiki.\n\nBuffett restated it in 1990:\n> “Margin of Safety.” Forty-two years after\n> reading that, I still think those are the\n> right three words.\n  — [[sources/buffett/letters/1990-berkshire-letter]]\n\n## Citations\n[[topics/margin-of-safety]] ·\n[[sources/buffett/letters/1990-berkshire-letter]] ·\n[[topics/mr-market-and-temperament]]</pre>' +
+        '<div class="spec">' +
+          '<div><span>Skill</span><b>/ask-wiki</b></div>' +
+          '<div><span>Path</span><b>INDEX → topic → link</b></div>' +
+          '<div><span>Guard</span><b>no invented authors</b></div>' +
+          '<div><span>Output</span><b>cited answer</b></div>' +
+        '</div>' +
+        '<p class="sheet__prep">Gap response is logged-real; the answered query is representative (quotes verbatim).</p>'
+    }
+  };
+
+  var overlay = document.getElementById('sheet');
+  var elEye   = document.getElementById('sheet-eyebrow');
+  var elTitle = document.getElementById('sheet-title');
+  var elBody  = document.getElementById('sheet-body');
+  var elClose = document.getElementById('sheet-close');
+  var lastFocus = null;
+
+  function open(id){
+    var d = NODES[id]; if(!d) return;
+    elEye.textContent = d.eyebrow;
+    elTitle.textContent = d.title;
+    elBody.innerHTML = d.html;
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+    lastFocus = document.activeElement;
+    elClose.focus();
+  }
+  function close(){
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    overlay.scrollTop = 0;
+    if(lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('.hot, .result-open'), function(h){
+    var id = h.getAttribute('data-node');
+    h.addEventListener('click', function(){ open(id); });
+    h.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(id); }
+    });
+  });
+  elClose.addEventListener('click', close);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) close(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && overlay.classList.contains('is-open')) close();
+  });
+})();
+</script>
+
+</body>
+</html>
